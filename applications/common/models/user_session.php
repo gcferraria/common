@@ -21,4 +21,4 @@ class User_Session extends DataMapper {
 }
 
 /* End of file user_session.php */
-/* Location: ./applications/gpanel/models/user_session.php */
+/* Location: ./applications/common/models/user_session.php */

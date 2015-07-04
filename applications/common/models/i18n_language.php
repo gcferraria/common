@@ -66,4 +66,4 @@ class I18n_Language extends DataMapper {
 }
 
 /* End of file i18nlanguage.php */
-/* Location: ./applications/gpanel/models/i18nlanguage.php */
+/* Location: ./applications/common/models/i18nlanguage.php */
