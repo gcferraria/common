@@ -7,56 +7,63 @@
  * @subpackage Libraries
  * @category   Breadcrumbs
  * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2011 - 2014 Gonçalo Ferraria
- * @version    1.0.4 breadcrumb.php 2014-07-29 22:26 gferraria $
+ * @copyright  2011 - 2015 Gonçalo Ferraria
+ * @version    1.1 breadcrumb.php 2015-07-29 13:37 gcferraria $
  */
 
 class Breadcrumb {
 
     /**
-     * @var array, Configuration list.
+     * @var    array, Configuration list.
      * @access private
     **/
     private $_config = array();
 
     /**
-     * @var array, Breadcrumbs list.
+     * @var    array, Breadcrumbs list.
      * @access private
     **/
     private $_breadcrumbs = array();
 
     /**
-     * @var string, Inicial Home Text.
+     * @var    string, Initial Home Icon.
+     * @access private
+     *
+    **/
+    private $_home_icon;
+
+    /**
+     * @var    string, Initial Home Text.
      * @access private
     **/
     private $_home_text;
 
     /**
-     * @var string, Inicial Home Link.
+     * @var    string, Initial Home Link.
      * @access private
     **/
     private $_home_link;
 
     /**
-     * @var string, Breadcrumbs divider.
+     * @var    string, Breadcrumbs divider.
      * @access private
     **/
     private $_divider;
 
     /**
-     * @var string, Main Wrapper to Breadcrumbs List.
+     * @var    string, Main Wrapper to Breadcrumbs List.
      * @access private
     **/
     private $_wrapper;
 
     /**
-     * @var string, Wrapper to Breadcrumbs Item Inline.
+     * @var    string, Wrapper to Breadcrumbs Item Inline.
      * @access private
     **/
     private $_wrapper_inline;
 
     /**
-     * @var string, Output Breadcrumbs List.
+     * @var    string, Output Breadcrumbs List.
      * @access private
     **/
     private $_output;
@@ -77,6 +84,7 @@ class Breadcrumb {
         $this->_load_config();
 
         // Inicialize breadcrumbs properties.
+        $this->_home_icon      = $this->_config['home_icon'];
         $this->_home_text      = $this->_config['home_text'];
         $this->_home_link      = $this->_config['home_link'];
         $this->_divider        = $this->_config['divider'];
@@ -217,19 +225,16 @@ class Breadcrumb {
          * If home breadcrumb link is provided and home link breadcrumb config is enabled
          * construct the home breadcrumb with link.
         **/
-            if( !$this->_config['unlink_home'] && !empty( $this->_home_link ) ) {
+        if( !$this->_config['unlink_home'] && !empty( $this->_home_link ) ) {
 
-                $link  = '<a href="' . site_url( $this->_home_link ) .'" title="' . strip_tags($this->_home_text) . '">';
-                $link .= $this->_home_text;
-                $link .= '</a>';
+            $link  = '<a href="' . site_url( $this->_home_link ) .'" title="' . strip_tags($this->_home_text) . '">';
+            $link .= $this->_home_text;
+            $link .= '</a>';
 
-                return $wrapper_inline[0] . $link . $wrapper_inline[1];
-            }
-            else {
-                return $wrapper_inline[0] . $this->_home_text . $wrapper_inline[1];
-            }
+            return $wrapper_inline[0] . $this->_home_icon . $link . $wrapper_inline[1];
+    }
 
-        return;
+        return $wrapper_inline[0] . $this->_home_icon . $this->_home_text . $wrapper_inline[1];
     }
 
    /**
