@@ -15,7 +15,7 @@ class Newsletter_Contact extends DataMapper {
 
     public $validation = array(
         'email' => array(
-            'type'  => 'text',
+            'type'  => 'email',
             'rules' => array( 'required', 'trim', 'valid_email' ),
         ),
         'name' => array(
