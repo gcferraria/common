@@ -330,7 +330,7 @@ class Content extends DataMapper {
    public function __to_array( $language = NULL ) {
 
        // Define base fields to be appear in data.
-       $fields = array( 'id', 'name', 'uripath', 'publish_date', 'disable_date', 'keywords' );
+       $fields = array( 'id', 'name', 'uripath', 'publish_date', 'disable_date', 'keywords', 'weight' );
 
        $data = array();
        foreach( $fields as $field ) {
