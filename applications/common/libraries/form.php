@@ -7,58 +7,62 @@
  * @subpackage Libraries
  * @category   Form
  * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2011 - 2012 Gonçalo Ferraria
- * @version    1.2 form.php 2012-10-21 12:20 gferraria $
+ * @copyright  2011 - 2016 Gonçalo Ferraria
+ * @version    1.3 form.php 2016-05-29 gferraria $
  */
 
 class Form {
 
     /**
-     * @var array, Configuration list.
-     * @access public
+     * Configuration list
+     * 
+     * @var array
     **/
     public $config = array();
 
     /**
-     * @var array, Language Definition.
-     * @access public
+     * Language Definition.
+     *
+     * @var array
     **/
     public $language = array();
 
     /**
-     * @var string, Form Action.
-     * @access public
+     * Form Action
+     *  
+     * @var string
     **/
     public $action;
 
     /**
-     * @var string, Form Method.
-     * @access public
+     * Form Method
+     * 
+     * @var string
     **/
     public $method;
 
     /**
-     * @var array, Form Attributes.
-     * @access public
+     * Form Attributes.
+     * 
+     * @var array
     **/
     public $attributes;
 
     /**
-     * @var array, Form Fields.
-     * @access public
+     * Form Fields
+     * 
+     * @var array
     **/
     public $fields = array();
 
     /**
-     * __construct: Form Class Constructor.
-     *              Initialize Form configuration.
+     * Form Class Constructor. Initialize Form configuration.
      * 
-     * @access public
      * @param  array $config, Configuration Data.
      * @return void
     **/
-    public function __construct( $config = array() ) {
-
+    public function __construct( $config = array() ) 
+    {
         $this->CI =& get_instance();
 
         // Load Form configuration.
@@ -74,13 +78,12 @@ class Form {
     }
 
     /**
-     * _load_config: Load Form Configuration File.
+     * Load Form Configuration File.
      * 
-     * @access private
      * @return void
     **/
-    private function _load_config() {
-
+    private function _load_config() 
+    {
         // Load Form Configuration.
         $this->CI->load->config('form', TRUE);
 
@@ -89,13 +92,12 @@ class Form {
     }
 
     /**
-     * _load_language: Load Form Language
+     * Load Form Language
      *
-     * @access private
      * @return void
      */
-    private function _load_language() {
-
+    private function _load_language() 
+    {
         // Load the Form language file.
         $this->CI->lang->load('form');
 
@@ -103,16 +105,15 @@ class Form {
     }
 
     /**
-     * builder: Buil Form. Define the Form Attributes.
+     * Buil Form. Define the Form Attributes.
      * 
-     * @access public
      * @param string $method, [Optional][ Default = 'post' ] Form Method.
      * @param string $action, [Optional] Form Action.
      * @param string $attrs,  [Optional] Form Attributes.
      * @return Form Object
     **/
-    function builder( $method = 'post', $action = '' , $attrs = array() ) {
-
+    public function builder( $method = 'post', $action = '' , $attrs = array() ) 
+    {
         // Set Form Action. If action is not defined, assume the action as current URI.
         $this->action = empty( $action ) ? $this->CI->uri->uri_string() : $action;
 
@@ -127,17 +128,16 @@ class Form {
     }
 
     /**
-     * add_fields: Add fields to Form.
+     * Add fields to Form.
      *
-     * @access public
-     * @param array $fields,  [Required] Fields List.
-     * @param mixed $data,    [Optional] Array or Object with fields data.
+     * @param array $fields, [Required] Fields List.
+     * @param mixed $data,   [Optional] Array or Object with fields data.
      * @return Form Object
     **/
-    public function add_fields( $fields, $data = NULL ) {
-
-        if ( !is_array( $fields ) ) {
-
+    public function add_fields( $fields, $data = NULL ) 
+    {
+        if ( !is_array( $fields ) ) 
+        {
             log_message(
                 'error',
                 'Library: ' . __CLASS__ . '; Method: ' . __METHOD__ . '; '.
@@ -147,32 +147,38 @@ class Form {
             show_error('Fields Parameter is not an array');
         }
 
-        foreach( $fields as $name => $field ) {
+        foreach( $fields as $name => $field ) 
+        {
             if ( !$this->_validate_field( $field ) )
                 continue;
 
             // Check if exist data for populate the field value.
-            if ( is_array( $data ) ) {
-
+            if ( is_array( $data ) ) 
+            {
                 // If field name exist in data.
                 $field['field'] = ( array_key_exists( $field['field'], $data ) )
                                 ? $data[ $field['field'] ]
                                 : '';
             }
-            elseif ( is_object( $data ) ) {
-
+            elseif ( is_object( $data ) ) 
+            {
                 // If field name is an attribute of Object.
                 $field['value'] = ( isset( $data->{ $field['field'] } ) )
                                 ? $data->{ $field['field'] }
                                 : '';
             }
-            elseif ( !isset( $field['value'] ) ) {
+            elseif ( !isset( $field['value'] ) ) 
+            {
                 $field['value'] = '';
             }
 
             // Check if exists help for field
             if ( !isset( $field['help'] ) )
                 $field['help'] = '';
+
+            // Check if label exists.
+            if ( !isset( $field['label'] ) && isset( $this->attributes['data-model'] ) ) 
+                $field['label'] = $this->lang->line( $this->attributes['data-model'] . '_' . $name);
 
             // Add the field Object to the list of form fields.
             $this->fields[ $name ] = $field;
@@ -182,14 +188,13 @@ class Form {
     }
 
     /**
-     * _validate_field: Check if field is valid.
+     * Check if field is valid.
      *
-     * @access private
-     * @param array $field,  [Required] Field to validate.
+     * @param array $field, [Required] Field to validate.
      * @return boolean.
     **/
-    private function _validate_field( $field ) {
-
+    private function _validate_field( $field ) 
+    {
         // Check if the field has type.
         if( !isset( $field['type'] ) )
             return FALSE;
@@ -202,14 +207,13 @@ class Form {
     }
 
     /**
-     * render_form: Render Form from the template.
+     * Render Form from the template.
      * 
-     * @access public
      * @param string $template, [Optional] Form Template.
      * @return string.
     **/
-    public function render_form( $template = '' ) {
-
+    public function render_form( $template = '' ) 
+    {
         if ( empty( $template ) )
             $template = $this->config['form_template'];
 
@@ -223,14 +227,13 @@ class Form {
     }
 
     /**
-     * render_fields: Render Field from the template.
+     * Render Field from the template.
      * 
-     * @access public
      * @param string $template, [Optional] Fields Path Template.
      * @return string.
     **/
-    public function render_fields( $fields = array(), $template = '' ) {
-
+    public function render_fields( $fields = array(), $template = '' ) 
+    {
         if ( empty( $this->fields ) )
             return;
 
@@ -241,8 +244,8 @@ class Form {
             $fields = $this->fields;
 
         $fields_output = '';
-        foreach( $fields as $name => $field ) {
-
+        foreach( $fields as $name => $field ) 
+        {
             // If Field is not defined assume the name based in your key.
             if ( !isset( $field['field'] ) )
                 $field['field'] = $name;
@@ -253,7 +256,8 @@ class Form {
                             : '';
 
             // If in Validation Rules have the required Validator, add this field as required.
-            $field['required'] = in_array( 'required', $field['rules'] );
+            if ( isset( $field['rules'] ) ) 
+                $field['required'] = in_array( 'required', $field['rules'] );
 
             // Gets the Field Render.
             $fields_output .= $this->CI->load->view(
@@ -267,19 +271,19 @@ class Form {
     }
 
     /**
-     * _render_attribues: Transform Attributes in HTML Format.
+     * Transform Attributes in HTML Format.
      * 
-     * @access private
      * @param string $attrs, [Required] Attributes to Render.
      * @return string.
     **/
-    private function _render_attributes( $attrs = array() ) {
-
+    private function _render_attributes( $attrs = array() ) 
+    {
         if ( empty( $attrs ) )
             return;
 
         $output = '';
-        foreach( $attrs as $name => $value ) {
+        foreach( $attrs as $name => $value ) 
+        {
             $output .= $name .'= "'. $value . '"';
         }
 
@@ -287,6 +291,3 @@ class Form {
     }
 
 }
-
-/* End of file form.php */
-/* Location: ./applications/common/libraries/form.php */
