@@ -120,8 +120,6 @@ class Content_Type extends DataMapper {
             // Parse Adicional Args.
             if ( $args = $field->args ) {
                 $lines = explode( '\r\n|\n', $args );
-                if( isset($lines) and $lines[0] == $args)
-                    $lines = explode("|", $args);
 
                 if ( is_array( $lines ) && sizeof( $lines ) > 0 ) {
 

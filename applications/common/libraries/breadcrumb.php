@@ -199,7 +199,7 @@ class Breadcrumb {
             // Get Wrapper Delimiters.
             $wrapper = explode( '|', $this->_wrapper );
 
-            $this->_output .= $wrapper[0] . $this->_output[1] . $wrapper[1]; 
+            $this->_output = $wrapper[0] . $this->_output . $wrapper[1]; 
         } 
 
         return $this->_output; 
