@@ -5,8 +5,8 @@
  *
  * @uses      DataMapper
  * @package   Content Types
- * @copyright Copyright (c) 2015, GonÃ§alo Ferraria
- * @author    GonÃ§alo Ferraria <gferraria@gmail.com>
+ * @copyright Copyright (c) 2015, Gonçalo Ferraria
+ * @author    Gonçalo Ferraria <gferraria@gmail.com>
  */
 
 class Content_Type extends DataMapper {
@@ -120,6 +120,8 @@ class Content_Type extends DataMapper {
             // Parse Adicional Args.
             if ( $args = $field->args ) {
                 $lines = explode( '\r\n|\n', $args );
+                if( isset($lines) and $lines[0] == $args)
+                    $lines = explode("|", $args);
 
                 if ( is_array( $lines ) && sizeof( $lines ) > 0 ) {
 
