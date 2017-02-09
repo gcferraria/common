@@ -459,7 +459,7 @@ class Category extends DataMapper {
     public function __to_array( $language ) {
 
         // Define fields to be appear in data.
-        $fields = array( 'id', 'name', 'uriname', 'description', 'weight', 'publish_flag', 'exposed', 'last_update_date' );
+        $fields = array( 'id', 'name', 'uriname', 'description', 'weight', 'publish_flag', 'listed', 'exposed', 'last_update_date' );
 
         $data = array();
         foreach( $fields as $field )
