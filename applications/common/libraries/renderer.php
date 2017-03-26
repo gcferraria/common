@@ -246,6 +246,3 @@ class Renderer {
         return $language->get_by_code( $this->language );
     }
 }
-
-/* End of file renderer.php */
-/* Location: ./applications/common/libraries/renderer.php */

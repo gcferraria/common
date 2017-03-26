@@ -126,6 +126,21 @@ class Renderer_Content extends Renderer_Object {
     }
 
     /**
+     * tops: Get Counter Objects
+     * 
+     * @access public
+     * @return int
+     *
+    **/
+    public function tops() {
+        $counters = $this->object
+            ->counters
+            ->count();
+
+        return $counters;
+    }
+
+    /**
      * field: Get an content field.
      *
      * @access public
@@ -165,6 +180,3 @@ class Renderer_Content extends Renderer_Object {
     }
 
 }
-
-/* End of file content.php */
-/* Location: ./applications/common/libraries/renderer/object/content.php */

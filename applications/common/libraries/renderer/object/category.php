@@ -278,10 +278,39 @@ class Renderer_Category extends Renderer_Object {
     }
 
     /**
+     * keywords: Gets contents keywords of the category 
+     * 
+     * @access public
+     * TODO: Replace Memory Calculation by Database 
+     * @param int $limit, [Required] Max number of returned keywords
+     * @return array
+     */
+    public function keywords( $limit = NULL ) {
+        $contents = $this->contents(1, array( 'max_contents' => 999999999 ) );
+        $keywords = array();
+        foreach ( $contents as $content ) {
+            $content = $content->object;
+            if ( !empty( $content->keywords ) ) {
+                $keywords = array_merge_recursive( $keywords, explode(",", $content->keywords ) ); 
+            }
+        }
+
+        // Remove duplicates
+        $keywords = array_unique($keywords);
+
+        // Limit the number of keywords.
+        if ( !is_null( $limit ) ) {
+            $keywords = array_slice ($keywords,0,$limit);
+        }
+
+        return $keywords;
+    }
+
+    /**
      * options: Get Category Options.
      *
      * @access public
-     * @param  string $string, [Optional] Option name.
+     * @param  string $name, [Optional] Option name.
      * @return array
     **/
     public function options( $name = null ) {
