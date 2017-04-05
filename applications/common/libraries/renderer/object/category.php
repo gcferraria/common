@@ -106,14 +106,16 @@ class Renderer_Category extends Renderer_Object {
      * categories: Get Children Categories.
      *
      * @access public
+     * @param  $options, Adicional options
      * @return array
     **/
-    public function categories() {
+    public function categories( $options = array() ) {
 
-        $data     = array();
+        $data = array();
+        $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
         $children = $this->object
             ->childrens
-            ->where( array( 'publish_flag' => 1, 'listed' => 1 ) )
+            ->where( $conditions )
             ->order_by('weight ASC');
 
         if ( $children ) {
