@@ -144,6 +144,14 @@ class Renderer {
     **/
     public function content( $object, $parent ) {
 
+        if ( isset($this->config['shared_categories']) && !empty($this->config['shared_categories']) ) {
+            foreach ($this->config['shared_categories'] as $shared ) {
+                $parent = str_replace( $shared, '', $parent );
+            }
+
+            $parent = $this->base_category . $parent;
+        }
+
         if ( !preg_match( '/.+\/$/', $parent ) )
             $parent .= '/';
 
