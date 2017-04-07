@@ -81,6 +81,23 @@ class Renderer_Content extends Renderer_Object {
         // Associate object content.
         $this->object = &$content;
         $this->type   = 'content';
+        
+        // If Context Category does not exists, let's try find the first category for this content
+        $category = new Category();
+        $category
+            ->where( array(
+                'uripath'      => $this->object->uripath, 
+                'publish_flag' => 1,
+            ))
+            ->like('uripath', $this->renderer->base_category())
+        ;
+
+        if( !$category->exists() ) {
+            $categories = $this->categories();
+            if ( !empty( $categories ) ) {
+                $this->context_uripath = $categories[0]->uripath; 
+            }
+        }
 
         return $this;
     }
@@ -92,7 +109,7 @@ class Renderer_Content extends Renderer_Object {
      * @return object
     **/
     public function parent() {
-        $parent = $this->renderer->category( $this->uripath );
+        $parent = $this->renderer->category( (!empty($this->context_uripath)) ? $this->context_uripath : $this->uripath );
 
         if ( $parent )
             return $parent;
@@ -112,6 +129,7 @@ class Renderer_Content extends Renderer_Object {
         $children = $this->object
             ->categories
             ->where('publish_flag', 1)
+            ->like('uripath', $this->renderer->base_category())
             ->order_by('weight ASC');
 
         if ( $children ) {

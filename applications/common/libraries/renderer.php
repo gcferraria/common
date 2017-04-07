@@ -149,7 +149,9 @@ class Renderer {
                 $parent = str_replace( $shared, '', $parent );
             }
 
-            $parent = $this->base_category . $parent;
+            if (strstr($parent, $this->base_category ) === FALSE ) {
+                $parent = $this->base_category . $parent;
+            }
         }
 
         if ( !preg_match( '/.+\/$/', $parent ) )
