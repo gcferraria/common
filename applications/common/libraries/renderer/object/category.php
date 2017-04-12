@@ -204,9 +204,40 @@ class Renderer_Category extends Renderer_Object {
         $data = array();
         if ( $contents ) {
             foreach ( $contents as $content ) {
-
                 $content = $this->renderer->content( $content, $this->uripath );
                 $content = new Renderer_Content_List_Item( $this, $content );
+
+                if ( isset( $options['results'] ) && ! empty( $options['results'] ) ) {
+                    $now     = new DateTime( date('Y-m-d') );
+                    $sDate   = new DateTime( date('Y-m-d', strtotime( $content->object->start_date ) ) );
+                    $eDate   = new DateTime( date('Y-m-d', strtotime( $content->object->end_date   ) ) );
+                    
+                    if ( 
+                        ( $options['results'] == 'past'    and $eDate > $now ) or 
+                        ( $options['results'] == 'future'  and $sDate < $now ) or
+                        ( $options['results'] == 'current' and !( $now >= $sDate and $now <= $eDate )  )
+                    ) {
+                        continue; 
+                    }
+                }
+
+                if ( isset( $options['date_from'] ) && ! empty( $options['date_from'] ) ) { 
+                    $now      = new DateTime( date('Y-m-d') );
+                    $sDate    = new DateTime( date('Y-m-d', strtotime( $content->object->start_date ) ) );
+                    $eDate    = new DateTime( date('Y-m-d', strtotime( $content->object->end_date   ) ) );
+                    $dateFrom = new DateTime( date('Y-m-d', strtotime( $options['date_from']        ) ) );
+                    $dateTo   = new DateTime( date('Y-m-d', strtotime( $options['date_to']          ) ) );
+
+                    $sDate->format('d/m/Y');
+                    $eDate->format('d/m/Y');
+                    $dateFrom->format('d/m/Y');
+                    $dateTo->format('d/m/Y');
+
+                    if ( !( ( $sDate <= $dateTo ) && ($dateFrom <= $eDate) ) ) {
+                        continue;
+                    }
+                }
+
                 array_push( $data, $content );
             }
         }
