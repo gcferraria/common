@@ -175,9 +175,11 @@ class Renderer_Category extends Renderer_Object {
 
         // Search Text.
         if ( isset( $options['search_text'] ) && ! empty( $options['search_text'] ) ) {
-            $contents->like( 'name', $options['search_text'] )
-                     ->where_in_related( 'values', 'name' , array('lead','title') )
-                     ->like_related( 'values', 'value', $options['search_text'] );
+            $contents->distinct(true)
+                     ->where_in_related( 'values', 'name' , array('lead','title','description') )
+                     ->like_related( 'values', 'value', $options['search_text'] )
+                     ->or_like( 'name', $options['search_text'] )
+                     ->or_like( 'keywords', $options['search_text']);
         }
 
         // Order by.
