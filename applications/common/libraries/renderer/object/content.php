@@ -127,9 +127,11 @@ class Renderer_Content extends Renderer_Object {
 
         $data     = array();
         $children = $this->object
+            ->distinct()
             ->categories
             ->where('publish_flag', 1)
             ->like('uripath', $this->renderer->base_category())
+            ->not_like('uriname', 'destaques')
             ->order_by('weight ASC');
 
         if ( $children ) {

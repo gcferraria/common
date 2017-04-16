@@ -228,11 +228,6 @@ class Renderer_Category extends Renderer_Object {
                     $dateFrom = new DateTime( date('Y-m-d', strtotime( $options['date_from']        ) ) );
                     $dateTo   = new DateTime( date('Y-m-d', strtotime( $options['date_to']          ) ) );
 
-                    $sDate->format('d/m/Y');
-                    $eDate->format('d/m/Y');
-                    $dateFrom->format('d/m/Y');
-                    $dateTo->format('d/m/Y');
-
                     if ( !( ( $sDate <= $dateTo ) && ($dateFrom <= $eDate) ) ) {
                         continue;
                     }
