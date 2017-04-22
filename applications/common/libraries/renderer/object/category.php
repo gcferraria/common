@@ -7,8 +7,8 @@
  * @subpackage Libraries
  * @category   Renderer
  * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2012 - 2015 Gonçalo Ferraria
- * @version    1.3 category.php 2015-01-24 19:26 gferraria $
+ * @copyright  2012 - 2017 Gonçalo Ferraria
+ * @version    1.4 category.php 2017-04-22 gferraria $
  */
 
 class Renderer_Category extends Renderer_Object {
@@ -40,19 +40,15 @@ class Renderer_Category extends Renderer_Object {
                 )->get();
 
             if ( !$category->exists() ) {
-                log_message(
-                    'error',
-                    'Library: ' . __CLASS__ . '; Method: ' . __METHOD__ . '; '.
-                    "Category not set with uripath $object"
-                );
-
                 show_404( "Category not set with uripath: $object" );
             }
         }
-        elseif( is_object( $object ) )
+        elseif( is_object( $object ) ) {
             $category = $object;
-        else
+        }
+        else {
             return;
+        }
 
         // Call Parent Constructor.
         parent::__construct(
@@ -180,6 +176,21 @@ class Renderer_Category extends Renderer_Object {
                      ->like_related( 'values', 'value', $options['search_text'] )
                      ->or_like( 'name', $options['search_text'] )
                      ->or_like( 'keywords', $options['search_text']);
+        }
+
+        // Exclude Categories 
+        if ( isset( $options['exclude'] ) && ! empty( $options['exclude'] ) ) {
+            $contents->where_subquery("NOT EXISTS ( 
+                    select  1 
+                      from  category_content cc
+                        ,   category c
+                     where  1=1 
+                       and  cc.content_id = categories_category_content.content_id
+                       and  cc.category_id = c.id
+                       and  c.uriname like '%". $options['exclude']."%'
+                       and  c.uripath like '%". $this->renderer->base_category()."%'
+                )"
+            );
         }
 
         // Order by.
