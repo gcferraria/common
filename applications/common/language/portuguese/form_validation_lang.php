@@ -1,8 +1,8 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 $lang = array (
-      'required'           => 'Campo Obrigat&oacute;rio.'
-    , 'valid_email'        => 'Email Inv&aacute;lido.'
+      'required'           => 'Campo Obrigatório.'
+    , 'valid_email'        => 'Email Inválido.'
     , 'valid_phone'        => 'Formato inv&aacute;lido'
     , 'valid_nif'          => 'Formato inv&aacute;lido'
     , 'valid_domain'       => 'Formato inv&aacute;lido'
@@ -16,6 +16,3 @@ $lang = array (
     , 'unespected_error'   => 'Erro inesperado, Contacte o Administrador'
     , 'unique_combination' => 'J&aacute; existe uma combina&ccedil;&atilde;o para este campo'
 );
-
-/* End of file form_validation_lang.php */
-/* Location: ./applications/commom/language/portuguese/array_helper.php */
