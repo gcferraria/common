@@ -9,7 +9,7 @@
  * @author    Gonçalo Ferraria <gferraria@gmail.com>
  */
 
-class Category_Option extends DataMapper {
+class Category_option extends DataMapper {
 
     var $table   = 'category_option';
     var $has_one = array(

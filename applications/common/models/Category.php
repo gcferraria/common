@@ -474,6 +474,3 @@ class Category extends DataMapper {
         return $data;
     }
 }
-
-/* End of file category.php */
-/* Location: ./applications/common/models/category.php */

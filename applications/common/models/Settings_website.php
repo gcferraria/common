@@ -9,7 +9,7 @@
  * @author    Gonçalo Ferraria <gferraria@gmail.com>
  */
 
-class Settings_Website extends DataMapper {
+class Settings_website extends DataMapper {
 
     var $table    = 'settings_website';
     var $has_many = array(
@@ -117,6 +117,3 @@ class Settings_Website extends DataMapper {
     }
 
 }
-
-/* End of file settings_website.php */
-/* Location: ./applications/common/models/settings_website.php */

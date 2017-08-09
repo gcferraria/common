@@ -9,7 +9,7 @@
  * @author    Gonçalo Ferraria <gferraria@gmail.com>
  */
 
-class Category_View extends DataMapper {
+class Category_view extends DataMapper {
 
 	var $table    = 'category_view';
 	var $has_one  = array(
@@ -19,6 +19,3 @@ class Category_View extends DataMapper {
     );
 
 }
-
-/* End of file category_view.php */
-/* Location: ./applications/common/models/category_view.php */
