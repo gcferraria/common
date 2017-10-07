@@ -1,18 +1,9 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Newsletter
- *
- * @uses      DataMapper
- * @package   Newsletter
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Newsletter extends DataMapper {
-
+class Newsletter extends DataMapper 
+{
     var $table = 'newsletter';
-
     var $has_one = array(
         'administrator' => array(
             'other_field'   => 'categories',
@@ -53,6 +44,3 @@ class Newsletter extends DataMapper {
     );
 
 }
-
-/* End of file newsletter.php */
-/* Location: ./applications/common/models/newsletter.php */

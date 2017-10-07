@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Category Option
- *
- * @uses      DataMapper
- * @package   Categories
- * @copyright Copyright (c) 2012, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Category_option extends DataMapper {
-
+class Category_option extends DataMapper 
+{
     var $table   = 'category_option';
     var $has_one = array(
         'category' => array(
@@ -38,6 +30,3 @@ class Category_option extends DataMapper {
     );
 
 }
-
-/* End of file category_option.php */
-/* Location: ./applications/common/models/category_option.php */

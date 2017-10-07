@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Content Type Field
- *
- * @uses      DataMapper
- * @package   Content Types
- * @copyright Copyright (c) 2015, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Content_Type_Field extends DataMapper {
-
+class Content_Type_Field extends DataMapper 
+{
     var $table   = 'content_type_field';
     var $has_one = array(
         'content_type' => array(
@@ -66,6 +58,3 @@ class Content_Type_Field extends DataMapper {
     );
 
 }
-
-/* End of file content_type_field.php */
-/* Location: ./applications/common/models/content_type_field.php */

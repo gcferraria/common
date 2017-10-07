@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Newsletter Contact
- *
- * @uses      DataMapper
- * @package   Newsletter
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Newsletter_Contact extends DataMapper {
-
+class Newsletter_Contact extends DataMapper 
+{
     var $table = 'newsletter_contact';
 
     public $validation = array(
@@ -33,6 +25,3 @@ class Newsletter_Contact extends DataMapper {
     );
 
 }
-
-/* End of file newsletter_contact.php */
-/* Location: ./applications/common/models/newsletter_contact.php */

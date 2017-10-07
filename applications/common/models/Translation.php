@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Translation
- *
- * @uses      DataMapper
- * @package   I18n
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Translation extends DataMapper {
-
+class Translation extends DataMapper 
+{
     var $table    = 'translation';
     var $has_one  = array(
         'category' => array(
@@ -49,8 +41,8 @@ class Translation extends DataMapper {
      * @access public
      * @return array
     **/
-    public function as_name_value_array() {
-
+    public function as_name_value_array() 
+    {
         $values = array();
         foreach ( $this->values->get() as $value )
             $values[ $value->name ] = $value->value;
@@ -59,6 +51,3 @@ class Translation extends DataMapper {
     }
 
 }
-
-/* End of file translation.php */
-/* Location: ./applications/common/models/translation.php */

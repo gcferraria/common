@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Content Type
- *
- * @uses      DataMapper
- * @package   Content Types
- * @copyright Copyright (c) 2015, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Content_Type extends DataMapper {
-
+class Content_Type extends DataMapper 
+{
     var $table    = 'content_type';
     var $has_many = array(
         'categories' => array(
@@ -61,27 +53,28 @@ class Content_Type extends DataMapper {
      * @param   string $related_field Can be used to specify which relationship to delete.
      * @return  bool Success or Failure of the delete.
     **/
-    public function delete( $object = '', $related_field = '' ) {
-
+    public function delete( $object = '', $related_field = '' ) 
+    {
         // Start Transaction
         $this->trans_begin();
 
         // Check if exists content for this content type and .
         // if exists Contents delete all.
-        foreach ( $this->contents->get() as $content ) {
+        foreach ( $this->contents->get() as $content )
             $content->delete();
-        }
 
         parent::delete( $object, $related_field );
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) {
+        if ( $this->trans_status() === FALSE ) 
+        {
             // Transaction failed, rollback.
             $this->trans_rollback();
 
             return FALSE;
         }
-        else {
+        else 
+        {
             // Transaction successful, commit.
             $this->trans_commit();
 
@@ -96,11 +89,13 @@ class Content_Type extends DataMapper {
      * @access public
      * @return array
     **/
-    public function fields() {
+    public function fields() 
+    {
         $fields = $this->content_type_fields;
 
         $data = array();
-        foreach ( $fields->get() as $field ) {
+        foreach ( $fields->get() as $field ) 
+        {
             // Define Field Rules.
             $rules = array();
 
@@ -118,21 +113,24 @@ class Content_Type extends DataMapper {
             );
 
             // Parse Adicional Args.
-            if ( $args = $field->args ) {
+            if ( $args = $field->args ) 
+            {
                 $lines = explode( '\r\n|\n', $args );
                 if( isset($lines) and $lines[0] == $args)
                     $lines = explode("|", $args);
 
-                if ( is_array( $lines ) && sizeof( $lines ) > 0 ) {
-
-                    foreach ( $lines as $line ) {
+                if ( is_array( $lines ) && sizeof( $lines ) > 0 ) 
+                {
+                    foreach ( $lines as $line ) 
+                    {
                         list( $name, $value ) = explode( '=', $line );
 
                         $values = explode( ',', $value );
-                        if ( is_array( $values ) && sizeof( $values ) > 0 ) {
-
+                        if ( is_array( $values ) && sizeof( $values ) > 0 ) 
+                        {
                             $temp = array();
-                            foreach( $values as $value ) {
+                            foreach( $values as $value ) 
+                            {
                                 $value = explode( ':', $value );
 
                                 if ( isset( $value[1] ) || ( isset( $value[1] ) && $value[1] == 0 ) )
@@ -144,7 +142,9 @@ class Content_Type extends DataMapper {
                             $values = $temp;
                         }
                         else
+                        {
                             $values = $value;
+                        }
 
                         $data[ $field->name ][ $name ] = $values;
                     }
@@ -156,15 +156,17 @@ class Content_Type extends DataMapper {
     }
 
     /**
-     * fields: Get Translatable Fields associated at this Content Type.
+     * translatable_fields: Get Translatable Fields associated at this Content Type.
      *
      * @access public
      * @return array
     **/
-    public function translatable_fields() {
+    public function translatable_fields() 
+    {
         $fields = $this->fields();
 
-        foreach ( $fields as $name => $attrs ) {
+        foreach ( $fields as $name => $attrs ) 
+        {
             if ( $attrs['translatable'] == 0 )
                 unset( $fields[$name] );
         }
@@ -173,6 +175,3 @@ class Content_Type extends DataMapper {
     }
 
 }
-
-/* End of file content_type.php */
-/* Location: ./applications/common/models/content_type.php */

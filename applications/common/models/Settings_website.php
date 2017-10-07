@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Settings_Website
- *
- * @uses      DataMapper
- * @package   Settings
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Settings_website extends DataMapper {
-
+class Settings_website extends DataMapper 
+{
     var $table    = 'settings_website';
     var $has_many = array(
         'languages' => array(
@@ -63,28 +55,31 @@ class Settings_website extends DataMapper {
      * @param  string $relation,[Optional] string to save the object as a specific relationship.
      * @return bool Success or Failure of the validation and save.
      **/
-    public function save( $object = '', $relation = '' ) {
-
+    public function save( $object = '', $relation = '' ) 
+    {
         if( empty( $object ) )
             return parent::save( $object, $relation );
 
         // Start Transaction
         $this->trans_begin();
 
-        if( is_array($object) && !empty($object) ) {
-
+        if( is_array($object) && !empty($object) ) 
+        {
             // If exists Languages Delete All.
-            if ( $this->languages->count() > 0 ) {
+            if ( $this->languages->count() > 0 ) 
+            {
                 $objects = $this->languages->get();
                 $this->delete( $objects->all, 'languages' );
             }
 
             // Associate Languages to Website.
-            if ( $ids = $object['languages'] ) {
-                if ( !empty( $ids ) ) {
-
+            if ( $ids = $object['languages'] ) 
+            {
+                if ( !empty( $ids ) ) 
+                {
                     $languages = array();
-                    foreach ( $ids as $language ) {
+                    foreach ( $ids as $language ) 
+                    {
                         $new = new i18n_language();
                         $new->get_by_id( $language );
 
@@ -102,13 +97,15 @@ class Settings_website extends DataMapper {
         }
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) {
+        if ( $this->trans_status() === FALSE ) 
+        {
             // Transaction failed, rollback.
             $this->trans_rollback();
 
             return FALSE;
         }
-        else {
+        else 
+        {
             // Transaction successful, commit.
             $this->trans_commit();
 

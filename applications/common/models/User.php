@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * User
- *
- * @uses      DataMapper
- * @package   Users
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class User extends DataMapper {
-
+class User extends DataMapper 
+{
     public $table    = 'user';
     public $has_many = array(
         'sessions'   => 'user_session',
@@ -60,24 +52,28 @@ class User extends DataMapper {
      * @param  string $relation,[Optional] string to save the object as a specific relationship.
      * @return bool Success or Failure of the validation and save.
      **/
-    public function save( $object = '', $relation = '' ) {
+    public function save( $object = '', $relation = '' ) 
+    {
         // Start Transaction
         $this->trans_begin();
 
-        if( is_array($object) && !empty($object) ) {
-
+        if( is_array($object) && !empty($object) ) 
+        {
             // If exists Roles Delete All.
-            if ( $this->roles->count() > 0 ) {
+            if ( $this->roles->count() > 0 ) 
+            {
                 $objects = $this->roles->get();
                 $this->delete( $objects->all, 'roles' );
             }
 
             // Associate Roles to User.
-            if ( $ids = $object['roles'] ) {
-                if ( !empty( $ids ) ) {
-
+            if ( $ids = $object['roles'] ) 
+            {
+                if ( !empty( $ids ) ) 
+                {
                     $roles = array();
-                    foreach ( $ids as $id ) {
+                    foreach ( $ids as $id ) 
+                    {
                         $role = new Role();
                         $role->get_by_id( $id );
 
@@ -95,13 +91,15 @@ class User extends DataMapper {
         parent::save( $object, $relation );
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) {
+        if ( $this->trans_status() === FALSE ) 
+        {
             // Transaction failed, rollback.
             $this->trans_rollback();
 
             return FALSE;
         }
-        else {
+        else 
+        {
             // Transaction successful, commit.
             $this->trans_commit();
 
@@ -115,8 +113,8 @@ class User extends DataMapper {
      * @access public
      * @return boolean
     **/
-    public function login() {
-
+    public function login() 
+    {
         // Validate and get this user by their property values and active status.
         $this->validate()->where('active_flag', 1)->get();
 
@@ -131,8 +129,8 @@ class User extends DataMapper {
      * @param  string $field, [Required] $field to encrypt.
      * @return void.
     **/
-    public function _encrypt( $field ) {
-
+    public function _encrypt( $field ) 
+    {
         // Don't encrypt an empty value.
         if ( !empty( $this->{ $field } ) )
             $this->{ $field } = sha1( $this->{ $field } );
@@ -145,8 +143,10 @@ class User extends DataMapper {
      * @param  $path strint, Path to check access.
      * @return boolean
      */
-    public function can( $uripath ) {
-        foreach( $this->roles->get() as $role ) {
+    public function can( $uripath ) 
+    {
+        foreach( $this->roles->get() as $role ) 
+        {
             if ( preg_match( "/$role->key_match/", $uripath ) == 1 )
                 return TRUE;
         }
@@ -155,6 +155,3 @@ class User extends DataMapper {
     }
 
 }
-
-/* End of file user.php */
-/* Location: ../applications/common/models/user.php */

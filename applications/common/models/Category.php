@@ -1,19 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Category
- *
- * @package    CodeIgniter
- * @subpackage Models
- * @uses       DataMapper
- * @category   Categories
- * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2015 Gonçalo Ferraria
- * @version    1.1 category.php 2015-01-24 gferraria $
- */
-
-class Category extends DataMapper {
-
+class Category extends DataMapper 
+{
     var $table    = 'category';
     var $has_one  = array(
         'childrens' => array(
@@ -132,7 +121,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function parents() {
+    public function parents() 
+    {
         return $this->_parents();
     }
 
@@ -142,7 +132,8 @@ class Category extends DataMapper {
      * @access private
      * @return array
     **/
-    private function _parents() {
+    private function _parents() 
+    {
         $parents = array();
         $parent  = $this->caller->get();
 
@@ -160,7 +151,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function path_uriname_array() {
+    public function path_uriname_array() 
+    {
         $path = array();
         foreach ( $this->parents() as $parent )
             $path[] = $parent->uriname;
@@ -174,7 +166,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function path_name_array() {
+    public function path_name_array() 
+    {
         $path = array();
         foreach ( $this->parents() as $parent )
             $path[] = $parent->name;
@@ -188,7 +181,8 @@ class Category extends DataMapper {
      * @access public
      * @return string
     **/
-    public function path() {
+    public function path() 
+    {
         $path_array = $this->path_uriname_array();
         $path       = implode('/', $path_array );
 
@@ -207,33 +201,37 @@ class Category extends DataMapper {
      * @param  string $relation,[Optional] string to save the object as a specific relationship.
      * @return bool Success or Failure of the validation and save.
      **/
-    public function save( $object = '', $relation = '' ) {
-
+    public function save( $object = '', $relation = '' ) 
+    {
         if( empty( $object ) )
             return parent::save( $object, $relation );
 
         // Start Transaction
         $this->trans_begin();
 
-        if( is_array($object) && !empty($object) ) {
-
-           if ( isset ( $object['views'] ) ) {
+        if( is_array($object) && !empty($object) ) 
+        {
+           if ( isset ( $object['views'] ) ) 
+           {
                 $views = $object['views'];
                 unset ( $object['views'] );
             }
 
             // If exists Content Types Delete All.
-            if ( $this->content_types->count() > 0 ) {
+            if ( $this->content_types->count() > 0 ) 
+            {
                 $objects = $this->content_types->get();
                 $this->delete( $objects->all, 'content_types' );
             }
 
             // Associate Content Types to Category.
-            if ( $ids = $object['content_types'] ) {
-                if ( !empty( $ids ) ) {
-
+            if ( $ids = $object['content_types'] ) 
+            {
+                if ( !empty( $ids ) ) 
+                {
                     $content_types = array();
-                    foreach ( $ids as $content_type ) {
+                    foreach ( $ids as $content_type ) 
+                    {
                         $new = new Content_Type();
                         $new->get_by_id( $content_type );
 
@@ -250,13 +248,14 @@ class Category extends DataMapper {
             parent::save( $object, $relation );
 
             // Fisrt Delete All Categories Views associated at this category.
-            foreach ( $this->views->get() as $view ) {
+            foreach ( $this->views->get() as $view )
                 $view->delete();
-            }
 
             // Second create the relations.
-            if ( !empty ( $views ) ) {
-                foreach ( $views as $id ) {
+            if ( !empty ( $views ) ) 
+            {
+                foreach ( $views as $id ) 
+                {
                     $category = new Category_View();
                     $category->category_id = $this->id;
                     $category->dest_category_id = $id;
@@ -267,13 +266,15 @@ class Category extends DataMapper {
         }
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) {
+        if ( $this->trans_status() === FALSE ) 
+        {
             // Transaction failed, rollback.
             $this->trans_rollback();
 
             return FALSE;
         }
-        else {
+        else 
+        {
             // Transaction successful, commit.
             $this->trans_commit();
 
@@ -289,8 +290,8 @@ class Category extends DataMapper {
      * @param  string $related_field Can be used to specify which relationship to delete.
      * @return bool Success or Failure of the delete.
     **/
-    public function delete( $object = '', $related_field = '' ) {
-
+    public function delete( $object = '', $related_field = '' ) 
+    {
         if( is_array( $object ) )
             return parent::delete( $object, $related_field );
 
@@ -298,25 +299,29 @@ class Category extends DataMapper {
         $this->trans_begin();
 
         // Delete Your Contents.
-        foreach ( $this->contents->get() as $content ) {
+        foreach ( $this->contents->get() as $content ) 
+        {
             $content->delete( array('category' => $this->id ) );
         }
 
         // Delete Childrens.
-        foreach ( $this->childrens->get() as $children ) {
+        foreach ( $this->childrens->get() as $children ) 
+        {
             $children->delete();
         }
 
         parent::delete();
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) {
+        if ( $this->trans_status() === FALSE ) 
+        {
             // Transaction failed, rollback.
             $this->trans_rollback();
 
             return FALSE;
         }
-        else {
+        else 
+        {
             // Transaction successful, commit.
             $this->trans_commit();
 
@@ -330,8 +335,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function inherited_options() {
-
+    public function inherited_options() 
+    {
         // Get my parent categories.
         $parents = $this->parents();
 
@@ -339,12 +344,12 @@ class Category extends DataMapper {
         array_pop( $parents );
 
         $options = array();
-        foreach ( $parents as $parent ) {
-
+        foreach ( $parents as $parent ) 
+        {
             // Get only inheritable options.
             $inherited = $parent->options->get_where(
-                    array( 'inheritable' => 1 )
-                );
+                array( 'inheritable' => 1 )
+            );
 
             foreach ( $inherited as $option )
                 $options[ $option->name ] = $option->value;
@@ -359,7 +364,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function own_options() {
+    public function own_options() 
+    {
         $options = array();
         foreach ( $this->options->get() as $option )
             $options[ $option->name ] = $option->value;
@@ -374,7 +380,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
     **/
-    public function combined_options() {
+    public function combined_options() 
+    {
         return array_merge_recursive(
             $this->inherited_options(),
             $this->own_options()
@@ -387,7 +394,8 @@ class Category extends DataMapper {
      * @access public
      * @return boolean
     **/
-    public function has_views() {
+    public function has_views() 
+    {
         return ( $this->views->count() > 0 );
     }
 
@@ -397,7 +405,8 @@ class Category extends DataMapper {
      * @access public
      * @return array
      */
-    public function languages() {
+    public function languages() 
+    {
         $languages = new I18n_Language();
         $languages->query("
             SELECT l.*
@@ -424,9 +433,11 @@ class Category extends DataMapper {
      * @access public
      * @return array
      */
-    public function translatable_fields() {
+    public function translatable_fields() 
+    {
         $fields = array();
-        foreach ( $this->validation as $name => $value ) {
+        foreach ( $this->validation as $name => $value ) 
+        {
             if ( isset( $value['translatable'] ) )
                 $fields[ $name ] = $value;
         }
@@ -441,7 +452,8 @@ class Category extends DataMapper {
      * @param  $language, Language to get values.
      * @return array
      */
-    public function translatable_values( $language ) {
+    public function translatable_values( $language ) 
+    {
         $values = array();
         foreach ( $this->translations->where('language_id', $language->id )->get() as $value )
             $values[ $value->name ] = $value->value;
@@ -456,8 +468,8 @@ class Category extends DataMapper {
      * @param  string $language, Language Code for get Translations
      * @return array
     **/
-    public function __to_array( $language ) {
-
+    public function __to_array( $language ) 
+    {
         // Define fields to be appear in data.
         $fields = array( 'id', 'name', 'uriname', 'description', 'weight', 'publish_flag', 'listed', 'exposed', 'last_update_date' );
 
@@ -465,12 +477,13 @@ class Category extends DataMapper {
         foreach( $fields as $field )
             $data[ $field ] = $this->$field;
 
-        if ( !empty( $language ) ) {
-            foreach ( $this->translatable_values( $language ) as $key => $value) {
+        if ( !empty( $language ) ) 
+        {
+            foreach ( $this->translatable_values( $language ) as $key => $value )
                 $data[ $key ] = $value;
-            }
         }
 
         return $data;
     }
+
 }

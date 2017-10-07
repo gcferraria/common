@@ -1,18 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * I18n Language Class
- *
- * @package    CodeIgniter
- * @subpackage Models
- * @uses       DataMapper
- * @category   i18n
- * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2014 Gonçalo Ferraria
- * @version    1.0 I18nLanguages.php 2014-11-15 gferraria $
- */
-class I18n_Language extends DataMapper {
-
+class I18n_Language extends DataMapper 
+{
     var $table = 'i18n_language';
     var $has_many = array(
         'websites' => array(
@@ -59,11 +49,9 @@ class I18n_Language extends DataMapper {
      *
      * @return boolean TRUE if is default and FALSE if not.
      */
-    public function is_default() {
+    public function is_default() 
+    {
         return ( $this->default != 0 );
     }
 
 }
-
-/* End of file i18nlanguage.php */
-/* Location: ./applications/common/models/i18nlanguage.php */

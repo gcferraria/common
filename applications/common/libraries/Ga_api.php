@@ -1,20 +1,47 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+<?php
 /**
- * Google Analytics Class
- * 
- * @package    CodeIgniter
+ * Ǵoogle Analitycs Class
+ *
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package CodeIgniter
  * @subpackage Libraries
  * @category   Google Analitycs
- * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2015 Gonçalo Ferraria
- * @version    1.0 ga-api.php 2015-11-03 19:05 gcferraria $
+ * @author  Gonçalo Ferraria <gferraria@gmail.com>
+ * @copyright   2015 Gonçalo Ferraria
+ * @license http://opensource.org/licenses/MIT  MIT License
+ * @link    https://codeigniter.com
+ * @since   1.0 ga-api.php 2015-11-03 gcferraria $
+ * @filesource
  */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 require_once 'google-api-php-client/src/Google/autoload.php';
 
-class Ga_Api {
-    
+class Ga_api 
+{    
     /**
      * @var    array, Configuration list.
      * @access private
@@ -64,8 +91,8 @@ class Ga_Api {
      * @access public
      * @return void
     **/
-    public function __construct() {
-
+    public function __construct() 
+    {
         // Get CI Object.
         $this->CI =& get_instance();
 
@@ -96,8 +123,8 @@ class Ga_Api {
      * @access private
      * @return void
     **/
-    private function _load_config() {
-
+    private function _load_config() 
+    {
         log_message(
             'debug',
             'Library: ' . __CLASS__ . '; Method: ' . __METHOD__ . '; '.
@@ -117,7 +144,8 @@ class Ga_Api {
      * @access private
      * @return void
     **/
-    private function _init_services() {
+    private function _init_services() 
+    {
         // Instancie new Google Client
         $this->client = new Google_Client();
         
@@ -138,7 +166,8 @@ class Ga_Api {
         );
         
         $this->client->setAssertionCredentials($cred);
-        if( $this->client->getAuth()->isAccessTokenExpired() ) {
+        if( $this->client->getAuth()->isAccessTokenExpired() ) 
+        {
             $this->client->getAuth()->refreshTokenWithAssertion($cred);
         }
 
@@ -150,11 +179,9 @@ class Ga_Api {
      *
      * @return boolean
     **/
-    public function is_logged() {
+    public function is_logged() 
+    {
         return $this->access_token_ready;
     }
 
 }
-
-/* End of file ga_api.php */
-/* Location: ./applications/common/libraries/ga_api.php */

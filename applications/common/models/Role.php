@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Role
- *
- * @uses      DataMapper
- * @package   Users
- * @copyright Copyright (c) 2014, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Role extends DataMapper {
-
+class Role extends DataMapper 
+{
     public $table    = 'role';
     public $has_many = array(
         'users' => array(
@@ -38,6 +30,3 @@ class Role extends DataMapper {
     );
 
 }
-
-/* End of file role.php */
-/* Location: ../applications/common/models/role.php */
