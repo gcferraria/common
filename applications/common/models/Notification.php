@@ -1,16 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * Notification
- *
- * @uses      DataMapper
- * @package   Notification
- * @copyright Copyright (c) 2013, Gonçalo Ferraria
- * @author    Gonçalo Ferraria <gferraria@gmail.com>
- */
-
-class Notification extends DataMapper {
-
+class Notification extends DataMapper 
+{
     var $table = 'notification';
 
     public $validation = array(
@@ -46,7 +38,8 @@ class Notification extends DataMapper {
      * @access public
      * @return array
      **/
-    public function get_unread_messages() {
+    public function get_unread_messages() 
+    {
         return $this->where( 'status', 0 )->order_by('creation_date', 'desc')->get();
     }
 
@@ -56,10 +49,9 @@ class Notification extends DataMapper {
      * @access public
      * @return array
      **/
-    public function get_unread_messages_number() {
+    public function get_unread_messages_number() 
+    {
         return $this->where( 'status', 0 )->count();
     }
-}
 
-/* End of file notification.php */
-/* Location: ../applications/common/models/notification.php */
+}

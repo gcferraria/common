@@ -1,17 +1,43 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+<?php
 /**
  * Renderer Class
  *
- * @package    CodeIgniter
+ * An open source application development framework for PHP
+ *
+ * This content is released under the MIT License (MIT)
+ *
+ * Copyright (c) 2014 - 2017, British Columbia Institute of Technology
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * @package CodeIgniter
  * @subpackage Libraries
  * @category   Renderer
- * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2012 - 2015 Gonçalo Ferraria
- * @version    1.2 renderer.php 2015-01-24 19:07 gferraria $
-**/
+ * @author  Gonçalo Ferraria <gferraria@gmail.com>
+ * @copyright   2012 - 2015 Gonçalo Ferraria
+ * @license http://opensource.org/licenses/MIT  MIT License
+ * @link    https://codeigniter.com
+ * @since   1.2 renderer.php 2015-01-24 gferraria $
+ * @filesource
+ */
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Load Plugins.
 require_once('renderer/object.php');
 require_once('renderer/list.php');
 require_once('renderer/list/item.php');
@@ -24,7 +50,13 @@ require_once('renderer/paged.php');
 require_once('renderer/object/category/list.php');
 require_once('renderer/object/category/list/item.php');
 
-class Renderer {
+class Renderer 
+{
+    /**
+     * @var object, Codeigniter Instance
+     * @access private
+    **/
+    private $CI;
 
     /**
      * @var array, Configuration list.
@@ -69,8 +101,8 @@ class Renderer {
      * @access public
      * @return void
     **/
-    public function __construct( $config = array() ) {
-
+    public function __construct( $config = array() ) 
+    {
         // Load Renderer configuration.
         $this->_load_config();
 
@@ -92,16 +124,16 @@ class Renderer {
      * @access private
      * @return void
     **/
-    private function _load_config() {
-
+    private function _load_config() 
+    {
         // Get CI instance.
-        $CI =& get_instance();
+        $this->CI =& get_instance();
 
         // Load Form Configuration.
-        $CI->load->config( 'renderer', TRUE );
+        $this->CI->load->config( 'renderer', TRUE );
 
         // Save in Config array the Form Configuration.
-        $this->config = $CI->config->item('renderer');
+        $this->config = $this->CI->config->item('renderer');
     }
 
     /**
@@ -110,7 +142,8 @@ class Renderer {
      * @access public
      * @return string
     **/
-    public function base_category() {
+    public function base_category() 
+    {
         return $this->base_category;
     }
 
@@ -121,9 +154,10 @@ class Renderer {
      * @param  mixed $object, [Optional] Category Uripath or Category Object.
      * @return mixed
     **/
-    public function category( $object ) {
-
-        if ( is_string( $object ) ) {
+    public function category( $object ) 
+    {
+        if ( is_string( $object ) ) 
+        {
             $object = str_replace( $this->base_category, '', $object );
             $object = $this->base_category . $object;
 
@@ -142,16 +176,15 @@ class Renderer {
      * @param  string $parent, [Required] Parent uripath.
      * @return mixed
     **/
-    public function content( $object, $parent ) {
-
-        if ( isset($this->config['shared_categories']) && !empty($this->config['shared_categories']) ) {
-            foreach ($this->config['shared_categories'] as $shared ) {
+    public function content( $object, $parent ) 
+    {
+        if ( isset($this->config['shared_categories']) && !empty($this->config['shared_categories']) ) 
+        {
+            foreach ($this->config['shared_categories'] as $shared )
                 $parent = str_replace( $shared, '', $parent );
-            }
 
-            if (strstr($parent, $this->base_category ) === FALSE ) {
+            if (strstr($parent, $this->base_category ) === FALSE ) 
                 $parent = $this->base_category . $parent;
-            }
         }
 
         if ( !preg_match( '/.+\/$/', $parent ) )
@@ -170,8 +203,8 @@ class Renderer {
      * @param  array  $data,    [Optional] Aditional Data.
      * @return string
     **/
-    public function render( $uripath, $rules = array(), $object, $data = array() ) {
-
+    public function render( $uripath, $rules = array(), $object, $data = array() ) 
+    {
         if ( !isset( $uripath ) || empty( $rules ) )
             return;
 
@@ -179,17 +212,14 @@ class Renderer {
         $path = str_replace( $this->base_category, '', $uripath );
 
         // Find file recursively.
-        if ( $path = $this->search( "/$path", $rules ) ) {
-
-            // Get CI instance.
-            $CI =& get_instance();
-
+        if ( $path = $this->search( "/$path", $rules ) ) 
+        {
             // Change root if defined.
             if ( $location = $this->location )
                 $path = $location . $path;
 
             // Return file output.
-            $CI->load->view(
+            $this->CI->load->view(
                 $path,
                 array_replace_recursive(
                     array( 'object' => $object, 'data' => $data ),
@@ -209,18 +239,20 @@ class Renderer {
      * @param  array  $rules, [Required] Object Rules.
      * @return string
     **/
-    public function search( $uripath, $rules ) {
-
+    public function search( $uripath, $rules ) 
+    {
         // Parse path.
         $path = explode( '/', $uripath );
 
         // Remove last position of path.
         array_pop( $path );
 
-        do {
+        do 
+        {
             $local_path = join( '/', $path );
 
-            foreach ( $rules as $rule ) {
+            foreach ( $rules as $rule ) 
+            {
                 $renderer = join( '/', array( $local_path, $rule ) );
 
                 //print_r( $renderer . "<br />" );
@@ -242,7 +274,8 @@ class Renderer {
      *
      * @param string $language language code for set context.
      */
-    public function set_language( $language ) {
+    public function set_language( $language ) 
+    {
         $this->language = $language;
     }
 
@@ -251,8 +284,10 @@ class Renderer {
      *
      * @return string
      */
-    public function get_language() {
+    public function get_language() 
+    {
         $language = new I18n_Language();
         return $language->get_by_code( $this->language );
     }
+
 }
