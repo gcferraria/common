@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Class
+ * Breadcrumb Class
  *
  * An open source application development framework for PHP
  *

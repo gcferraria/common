@@ -1,6 +1,6 @@
 <?php
 /**
- * Form Class
+ * Authentication Class
  *
  * An open source application development framework for PHP
  *
