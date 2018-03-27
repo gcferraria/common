@@ -30,10 +30,10 @@
  * @subpackage Libraries
  * @category   Breadcrumbs
  * @author  Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright   2011 - 2017 Gonçalo Ferraria
+ * @copyright   2011 - 2018 Gonçalo Ferraria
  * @license http://opensource.org/licenses/MIT  MIT License
  * @link    https://codeigniter.com
- * @since   2.0 breadcrumb.php 2017-10-07 gcferraria $
+ * @since   2.1 breadcrumb.php 2018-03-27 gcferraria $
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -110,9 +110,12 @@ class Breadcrumb
         // Load Breadcrumb Configuration.
         $this->_load_config();
 
+        // Load Language File
+        $this->_load_language();
+
         // Inicialize breadcrumbs properties.
+        $this->_home_text      = $this->lang->line('home');
         $this->_home_icon      = $this->_config['home_icon'];
-        $this->_home_text      = $this->_config['home_text'];
         $this->_home_link      = $this->_config['home_link'];
         $this->_divider        = $this->_config['divider'];
         $this->_wrapper        = $this->_config['wrapper'];
@@ -143,6 +146,19 @@ class Breadcrumb
 
         // Save in Config array the Breadcrumb Configuration
         $this->_config = $this->CI->config->item('breadcrumb');
+    }
+
+    /**
+     * Load Form Language
+     *
+     * @return void
+     */
+    private function _load_language() 
+    {
+        // Load the Form language file.
+        $this->CI->lang->load('breadcrumb');
+
+        $this->lang = $this->CI->lang;
     }
 
     /**
