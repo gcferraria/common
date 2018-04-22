@@ -30,10 +30,10 @@
  * @subpackage Libraries
  * @category   Renderer
  * @author  Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright   2012 - 2015 Gonçalo Ferraria
+ * @copyright   2012 - 2018 Gonçalo Ferraria
  * @license http://opensource.org/licenses/MIT  MIT License
  * @link    https://codeigniter.com
- * @since   1.2 renderer.php 2015-01-24 gferraria $
+ * @since   1.3 renderer.php 2018-04-22 gferraria $
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -83,6 +83,12 @@ class Renderer
     public $legacy;
 
     /**
+     * @var boolean, debug mode
+     * @access public
+    **/
+    public $debug;
+
+    /**
      * @var boolean, i18n support
      * @access public
     **/
@@ -110,7 +116,8 @@ class Renderer
         $this->base_category = $this->config['base_category'];
         $this->location      = $this->config['location'];
         $this->legacy        = $this->config['legacy'];
-        $this->i18n          = isset( $this->config['i18n'] ) ? $this->config['i18n'] : FALSE;
+        $this->i18n          = isset( $this->config['i18n'] )  ? $this->config['i18n']  : FALSE;
+        $this->debug         = isset( $this->config['debug'] ) ? $this->config['debug'] : FALSE;
 
         log_message(
             'debug',
@@ -255,8 +262,9 @@ class Renderer
             {
                 $renderer = join( '/', array( $local_path, $rule ) );
 
-                //print_r( $renderer . "<br />" );
-
+                if ( $this->debug )
+                    print_r( $renderer . "<br />" );
+    
                 if ( is_file( APPPATH . 'views/html' . "$renderer.php") )
                     return $renderer;
             }
