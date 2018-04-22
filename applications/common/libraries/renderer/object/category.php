@@ -7,8 +7,8 @@
  * @subpackage Libraries
  * @category   Renderer
  * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2012 - 2017 Gonçalo Ferraria
- * @version    1.4 category.php 2017-04-22 gferraria $
+ * @copyright  2012 - 2018 Gonçalo Ferraria
+ * @version    1.5 category.php 2018-04-22 gferraria $
  */
 
 class Renderer_Category extends Renderer_Object {
@@ -109,10 +109,25 @@ class Renderer_Category extends Renderer_Object {
 
         $data = array();
         $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
-        $children = $this->object
-            ->childrens
-            ->where( $conditions )
-            ->order_by('weight ASC');
+
+        if( $this->object->has_views() ) {
+            $views = array();
+            foreach ( $this->object->views->get() as $view ) {
+                $destination = new Category();
+                $destination->get_by_id ( $view->dest_category_id );
+
+                $children = $destination
+                    ->childrens
+                    ->where( $conditions )
+                    ->order_by('weight ASC');
+            }
+        }
+        else {
+            $children = $this->object
+                ->childrens
+                ->where( $conditions )
+                ->order_by('weight ASC');
+        }
 
         if ( $children ) {
             foreach ( $children->get() as $child ) {
@@ -146,8 +161,9 @@ class Renderer_Category extends Renderer_Object {
         if( $this->object->has_views() ) {
 
             $views = array();
-            foreach ( $this->object->views->get() as $view )
+            foreach ( $this->object->views->get() as $view ) {
                 $views[] = $view->dest_category_id;
+            }
 
             $contents = new Content();
             $contents
@@ -441,6 +457,3 @@ class Renderer_Category extends Renderer_Object {
     }
 
 }
-
-/* End of file category.php */
-/* Location: ../applications/common/libraries/renderer/object/category.php */
