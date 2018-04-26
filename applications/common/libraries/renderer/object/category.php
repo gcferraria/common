@@ -113,14 +113,14 @@ class Renderer_Category extends Renderer_Object {
         if( $this->object->has_views() ) {
             $views = array();
             foreach ( $this->object->views->get() as $view ) {
-                $destination = new Category();
-                $destination->get_by_id ( $view->dest_category_id );
-
-                $children = $destination
-                    ->childrens
-                    ->where( $conditions )
-                    ->order_by('weight ASC');
+                $views[] = $view->dest_category_id;
             }
+
+            $children = new Category();
+            $children
+                ->where_in( 'id', $views )
+                ->where( $conditions )
+                ->order_by('weight ASC');
         }
         else {
             $children = $this->object

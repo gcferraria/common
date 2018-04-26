@@ -23,10 +23,11 @@ class Renderer_Category_List_Item extends Renderer_Category {
         $object = $this->object;
         
         return array(
+            join( '-', array( '_view-item', $object->uriname ) ),
+            '_view-item',
             join( '-', array( '_cats', $object->uriname ) ),
             '_cats-item',
             join( '-', array( '_cat', $object->uriname ) ),
-            '_view-item',
             '_cat',
         );
     }
