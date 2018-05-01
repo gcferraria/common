@@ -103,6 +103,21 @@ class Renderer_Content extends Renderer_Object {
     }
 
     /**
+     * parent: Get Primary Category based on your current uripath.
+     *
+     * @access public
+     * @return object
+    **/
+    public function primary() {
+        $primary = $this->renderer->category( $this->uripath );
+
+        if ( $primary )
+            return $primary;
+
+        return;
+    }
+
+    /**
      * parent: Get Parent Category.
      *
      * @access public
