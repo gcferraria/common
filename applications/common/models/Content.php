@@ -58,8 +58,8 @@ class Content extends DataMapper
             'position' => '9995',
         ),
         'disable_date' => array(
-            'type'  => 'datetime',
-            'rules' => array(),
+            'type'     => 'datetime',
+            'rules'    => array(),
             'position' => '9996',
         ),
         'weight' => array(
@@ -75,11 +75,12 @@ class Content extends DataMapper
             'position' => '9998',
         ),
         'keywords' => array(
-            'type' => 'tag',
+            'type'     => 'tag',
             'position' => '9999',
         ),
         'categories' => array(
             'type'     => 'category',
+            'primary'  => 1,
             'position' => '10000',
         ),
     );
