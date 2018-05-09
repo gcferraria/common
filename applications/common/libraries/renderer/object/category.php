@@ -194,8 +194,8 @@ class Renderer_Category extends Renderer_Object {
                      ->or_like( 'keywords', $options['search_text']);
         }
 
-        // Exclude Categories 
-        if ( isset( $options['exclude'] ) && ! empty( $options['exclude'] ) ) {
+        // Exclude Categories by uriname
+        if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && !is_numeric($options['exclude']) ) {
             $contents->where_subquery("NOT EXISTS ( 
                     select  1 
                       from  category_content cc
@@ -207,6 +207,10 @@ class Renderer_Category extends Renderer_Object {
                        and  c.uripath like '%". $this->renderer->base_category()."%'
                 )"
             );
+        } 
+        // Exclude Contents by Id
+        else if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && is_numeric($options['exclude']) ) {
+                $contents->not_like('id', $options['exclude']);
         }
 
         // Order by.
