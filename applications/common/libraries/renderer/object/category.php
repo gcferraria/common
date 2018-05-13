@@ -176,7 +176,9 @@ class Renderer_Category extends Renderer_Object {
                 );
         }
         else {
-            $contents = $this->object->contents
+            $contents = new Content();
+            $contents
+                ->where_related( 'categories', 'id' , $this->object->id )
                 ->where( array(
                         'publish_date <=' => date("Y-m-d H:i:s"),
                         'disable_date <'  => date("Y-m-d H:i:s"),
@@ -187,11 +189,18 @@ class Renderer_Category extends Renderer_Object {
 
         // Search Text.
         if ( isset( $options['search_text'] ) && ! empty( $options['search_text'] ) ) {
-            $contents->distinct(true)
-                     ->where_in_related( 'values', 'name' , array('lead','title','description') )
-                     ->like_related( 'values', 'value', $options['search_text'] )
-                     ->or_like( 'name', $options['search_text'] )
-                     ->or_like( 'keywords', $options['search_text']);
+            $contents
+                ->group_start()
+                ->or_like( 'name', $options['search_text'] )
+                ->or_like( 'keywords', $options['search_text'])
+                ->or_where_subquery("EXISTS (
+                    SELECT 1 
+                      FROM content_value v
+                     WHERE v.content_id = categories_category_content.content_id
+                       AND v.value LIKE '%". $options['search_text'] ."%'
+                )")
+                ->group_end()
+            ;
         }
 
         // Exclude Categories by uriname
