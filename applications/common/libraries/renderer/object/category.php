@@ -199,7 +199,20 @@ class Renderer_Category extends Renderer_Object {
                      WHERE v.content_id = categories_category_content.content_id
                        AND v.value LIKE '%". $options['search_text'] ."%'
                 )")
+                ->or_where_subquery("EXISTS (
+                    SELECT 1 
+                      FROM translation t
+                     WHERE t.content_id = categories_category_content.content_id
+                       AND t.value LIKE '%". $options['search_text'] ."%'
+                )")
                 ->group_end()
+            ;
+        }
+
+        // Search by Keyword
+        if ( isset( $options['keyword'] ) && ! empty( $options['keyword'] ) ) {
+            $contents
+                ->like( 'keywords', $options['keyword'])
             ;
         }
 
