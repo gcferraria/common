@@ -1910,6 +1910,7 @@ class DataMapper implements IteratorAggregate {
 				{
 					foreach ($this->{$type} as $model => $properties)
 					{
+                        // FERRARIA
 						// do we want cascading delete's?
 						if ($properties['cascade_delete'])
 						{
@@ -1925,7 +1926,7 @@ class DataMapper implements IteratorAggregate {
 
 							// We have to just set NULL for in-table foreign keys that
 							// are pointing at this object
-							if($relationship_table == $object->table  && // ITFK
+							/*if($relationship_table == $object->table  && // ITFK
 									 // NOT ITFKs that point at the other object
 									 ! ($object->table == $this->table && // self-referencing has_one join
 										in_array($other_model . '_id', $this->fields)) // where the ITFK is for the other object
@@ -1936,8 +1937,8 @@ class DataMapper implements IteratorAggregate {
 								// Update table to remove relationships
 								$this->db->where($this_model . '_id', $this->id);
 								$this->db->update($object->table, $data);
-							}
-							else if ($relationship_table != $this->table)
+							}*/
+							if ($relationship_table != $this->table)
 							{
 
 								$data = array($this_model . '_id' => $this->id);
