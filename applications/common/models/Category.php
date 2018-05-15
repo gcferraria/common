@@ -90,6 +90,10 @@ class Category extends DataMapper
 			'type'         => 'textarea',
 		    'translatable' => TRUE,
         ),
+        'image' => array(
+			'type'         => 'image',
+		    'translatable' => TRUE,
+        ),
         'content_types' => array(
             'type' => 'multiselect',
         ),
