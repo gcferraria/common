@@ -383,6 +383,7 @@ class Renderer_Category extends Renderer_Object {
 
         // Limit the number of keywords.
         if ( !is_null( $limit ) ) {
+            shuffle($keywords);
             $keywords = array_slice ($keywords,0,$limit);
         }
 
