@@ -368,7 +368,7 @@ class Renderer_Category extends Renderer_Object {
      * @param int $limit, [Required] Max number of returned keywords
      * @return array
      */
-    public function keywords( $limit = NULL ) {
+    public function keywords( $limit = NULL, $options = array() ) {
         $contents = $this->contents(1, array( 'max_contents' => 999999999 ) );
         $keywords = array();
         foreach ( $contents as $content ) {
@@ -385,6 +385,11 @@ class Renderer_Category extends Renderer_Object {
         if ( !is_null( $limit ) ) {
             shuffle($keywords);
             $keywords = array_slice ($keywords,0,$limit);
+        }
+
+        if ( isset( $options['keyword'] ) && !empty($options['keyword']) ) {
+            array_push($keywords, $options['keyword']);
+            $keywords = array_unique($keywords);
         }
 
         return $keywords;
