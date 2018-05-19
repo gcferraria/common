@@ -388,7 +388,7 @@ class Renderer_Category extends Renderer_Object {
         }
 
         if ( isset( $options['keyword'] ) && !empty($options['keyword']) ) {
-            array_push($keywords, $options['keyword']);
+            array_unshift($keywords, $options['keyword']);
             $keywords = array_unique($keywords);
         }
 
