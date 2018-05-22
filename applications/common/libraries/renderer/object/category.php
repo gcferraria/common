@@ -158,7 +158,7 @@ class Renderer_Category extends Renderer_Object {
         // Get Category Options and get current date.
         $options = array_merge_recursive( $this->options(), $options );
 
-        if( $this->object->has_views() ) {
+        if ( $this->object->has_views() ) {
 
             $views = array();
             foreach ( $this->object->views->get() as $view ) {
@@ -216,6 +216,21 @@ class Renderer_Category extends Renderer_Object {
             ;
         }
 
+        // Filter by Key Value
+        if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) {
+            
+            if ( is_array( $options['values']) ) {
+                foreach ( $options['values'] as $field => $value ) {
+                    $contents
+                        ->group_start()
+                        ->where_related( 'values', 'name', str_replace( '<>', '' , $field))
+                        ->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value )
+                        ->group_end()
+                    ;
+                }
+            }
+        }
+
         // Exclude Categories by uriname
         if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && !is_numeric($options['exclude']) ) {
             $contents->where_subquery("NOT EXISTS ( 
@@ -259,33 +274,6 @@ class Renderer_Category extends Renderer_Object {
             foreach ( $contents as $content ) {
                 $content = $this->renderer->content( $content, $this->uripath );
                 $content = new Renderer_Content_List_Item( $this, $content );
-
-                if ( isset( $options['results'] ) && ! empty( $options['results'] ) ) {
-                    $now     = new DateTime( date('Y-m-d') );
-                    $sDate   = new DateTime( date('Y-m-d', strtotime( $content->object->start_date ) ) );
-                    $eDate   = new DateTime( date('Y-m-d', strtotime( $content->object->end_date   ) ) );
-                    
-                    if ( 
-                        ( $options['results'] == 'past'    and $eDate > $now ) or 
-                        ( $options['results'] == 'future'  and $sDate < $now ) or
-                        ( $options['results'] == 'current' and !( $now >= $sDate and $now <= $eDate )  )
-                    ) {
-                        continue; 
-                    }
-                }
-
-                if ( isset( $options['date_from'] ) && ! empty( $options['date_from'] ) ) { 
-                    $now      = new DateTime( date('Y-m-d') );
-                    $sDate    = new DateTime( date('Y-m-d', strtotime( $content->object->start_date ) ) );
-                    $eDate    = new DateTime( date('Y-m-d', strtotime( $content->object->end_date   ) ) );
-                    $dateFrom = new DateTime( date('Y-m-d', strtotime( $options['date_from']        ) ) );
-                    $dateTo   = new DateTime( date('Y-m-d', strtotime( $options['date_to']          ) ) );
-
-                    if ( !( ( $sDate <= $dateTo ) && ($dateFrom <= $eDate) ) ) {
-                        continue;
-                    }
-                }
-
                 array_push( $data, $content );
             }
         }
