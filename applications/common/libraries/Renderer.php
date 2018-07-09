@@ -262,9 +262,10 @@ class Renderer
             {
                 $renderer = join( '/', array( $local_path, $rule ) );
 
-                if ( $this->debug )
-                    print_r( $renderer . "<br />" );
-    
+                if ( $this->debug ) {
+                    log_message('debug', __CLASS__ . $renderer );
+                }
+
                 if ( is_file( APPPATH . 'views/html' . "$renderer.php") )
                     return $renderer;
             }
