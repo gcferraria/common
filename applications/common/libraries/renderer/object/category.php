@@ -218,17 +218,16 @@ class Renderer_Category extends Renderer_Object {
 
         // Filter by Key Value
         if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) {
-            
+
             if ( is_array( $options['values']) ) {
+                $contents->group_start();
+                $contents->where_related( 'values', 'name', str_replace( '<>', '' , array_keys($options['values'])));
                 foreach ( $options['values'] as $field => $value ) {
-                    $contents
-                        ->group_start()
-                        ->where_related( 'values', 'name', str_replace( '<>', '' , $field))
-                        ->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value )
-                        ->group_end()
-                    ;
+                $contents->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value );
                 }
+                $contents->group_end();
             }
+
         }
 
         // Exclude Categories by uriname
