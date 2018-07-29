@@ -3,19 +3,17 @@
 /**
  * Renderer_Category Class
  *
- * @package    CodeIgniter
+ * @package    Commom
  * @subpackage Libraries
  * @category   Renderer
- * @author     Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright  2012 - 2018 Gonçalo Ferraria
- * @version    1.5 category.php 2018-04-22 gferraria $
+ * @author     Gonçalo Ferraria
  */
-
 class Renderer_Category extends Renderer_Object {
 
     /**
-     * @var string, category database object.
-     * @access public
+     * category database object.
+     * 
+     * @var object
     **/
     public $object;
 
@@ -28,26 +26,30 @@ class Renderer_Category extends Renderer_Object {
      * @param  object $renderer, [Required] Renderer Object.
      * @return void
     **/
-    public function __construct( $object, $renderer ) {
-
-        if ( is_string( $object ) ) { // Is an uripath.
+    public function __construct($object, $renderer) 
+    {
+        if ( is_string($object) ) // Is an uripath.
+        { 
             // Get Category Object.
             $category = new Category();
             $category->where( array(
-                        'uripath'      => $object,
-                        'publish_flag' => 1,
-                    )
-                )->get();
+                    'uripath'      => $object,
+                    'publish_flag' => 1,
+                )
+            )->get();
 
-            if ( !$category->exists() ) {
+            if ( !$category->exists() ) 
+            {
                 show_404( "Category not set with uripath: $object" );
             }
         }
-        elseif( is_object( $object ) ) {
+        elseif( is_object($object) ) 
+        {
             $category = $object;
         }
-        else {
-            return;
+        else 
+        {
+            return NULL;
         }
 
         // Call Parent Constructor.
@@ -70,15 +72,16 @@ class Renderer_Category extends Renderer_Object {
      * @access public
      * @return object
     **/
-    public function parent() {
-
+    public function parent() 
+    {
         // Get Parent Object.
         $parent = $this->object->caller->get();
 
-        if ( $parent->exists() )
+        if ( $parent->exists() ) {
             return $this->renderer->category( $parent->uripath );
+        }
 
-        return;
+        return NULL;
     }
 
     /**
@@ -87,7 +90,8 @@ class Renderer_Category extends Renderer_Object {
      * @access public
      * @return array
     **/
-    public function parents() {
+    public function parents() 
+    {
         $parents = array();
 
         foreach( $this->object->parents() as $parent ) {
@@ -105,14 +109,16 @@ class Renderer_Category extends Renderer_Object {
      * @param  $options, Adicional options
      * @return array
     **/
-    public function categories( $options = array() ) {
+    public function categories($options = array()) {
 
         $data = array();
         $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
 
-        if( $this->object->has_views() ) {
+        if( $this->object->has_views() ) 
+        {
             $views = array();
-            foreach ( $this->object->views->get() as $view ) {
+            foreach ( $this->object->views->get() as $view ) 
+            {
                 $views[] = $view->dest_category_id;
             }
 
@@ -122,27 +128,131 @@ class Renderer_Category extends Renderer_Object {
                 ->where( $conditions )
                 ->order_by('weight ASC');
         }
-        else {
+        else 
+        {
             $children = $this->object
                 ->childrens
                 ->where( $conditions )
                 ->order_by('weight ASC');
         }
 
-        if ( $children ) {
-            foreach ( $children->get() as $child ) {
-
-                if( !$this->renderer->legacy )
-                    $child = new Renderer_Category_List_Item( $child, $this->renderer );
-
+        if ( $children ) 
+        {
+            foreach ( $children->get() as $child ) 
+            {
+                $child = new Renderer_Category_List_Item( $child, $this->renderer );
                 array_push( $data, $child );
             }
         }
 
-        if( !$this->renderer->legacy )
-            return new Renderer_Category_List( $this, $data, null, null, null );
+        return new Renderer_Category_List( $this, $data, null, null, null );
+    }
 
-        return $data;
+    /**
+     * _call: invoking when call inaccessible methods.
+     *        Used for invoking specific contents using views
+     * 
+     * @access public 
+     * @param  string $name, [Required] Method Name
+     * @param  array  $args, [Optional] Options 
+     * @return void
+    **/
+    public function __call($name, $args = array()) 
+    {
+        if ( $this->renderer->debug ) 
+        {
+            log_message( "debug", "Calling object method '$name' " . implode(', ', $args) );
+        }
+
+        // Get Category Options and get current date.
+        $options = array_merge_recursive( $this->options(), $args[0] );
+
+        // Call class dynamically 
+        $this->renderer->CI->load->helper('inflector');
+        $class = ucfirst(singular($name));
+
+        if ( $this->object->has_views() ) 
+        {
+            $views = array();
+            foreach ( $this->object->views->get() as $view ) 
+            {
+                $views[] = $view->dest_category_id;
+            }
+
+            $contents = new $class();
+            $contents
+                ->where_in_related( 'categories', 'id' , $views )
+                ->where( array(
+                        'publish_date <=' => date("Y-m-d H:i:s"),
+                        'disable_date <'  => date("Y-m-d H:i:s"),
+                        'publish_flag'    => 1,
+                    )
+                );
+        }
+        else 
+        {
+            $contents = new $class();
+            $contents
+                ->where_related( 'categories', 'id' , $this->object->id )
+                ->where( array(
+                        'publish_date <=' => date("Y-m-d H:i:s"),
+                        'disable_date <'  => date("Y-m-d H:i:s"),
+                        'publish_flag'    => 1,
+                    )
+                );
+        }
+
+        // Order by.
+        if ( isset( $options['order_by'] ) ) 
+        {
+            $contents->order_by( $options['order_by'], isset( $options['order_direction'] ) 
+                                                            ? $options['order_direction'] 
+                                                            : 'desc' );
+        } 
+        else 
+        {
+            $contents->order_by( 'publish_date', 'desc' );
+            $contents->order_by( 'weight', 'asc' );
+        }
+
+        // Filter by Key Value
+        if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) 
+        {
+            if ( is_array( $options['values']) ) 
+            {
+                foreach ( $options['values'] as $field => $value ) 
+                {
+                    $contents->where( $field, $value );
+                }
+            }
+        }
+
+        // Limit.
+        if ( isset( $options['max_contents'] ) ) 
+        {
+            $page = 1;
+            $options['page_size'] = $options['max_contents'];
+        }
+
+        // Offset.
+        $contents->get_paged(
+            $page,
+            isset( $options['page_size'] ) ? $options['page_size'] : 25
+        );
+
+        $data = array();
+        if ( $contents ) 
+        {
+            foreach ( $contents as $content ) 
+            {
+                $content = $this->renderer->content( $content, $this->uripath );
+                $content = new Renderer_Content_List_Item( $this, $content );
+                array_push( $data, $content );
+            }
+        }
+
+        // Create an new Content List.
+        return new Renderer_Content_List( $this, $data, null, null, null );
     }
 
     /**
@@ -153,15 +263,16 @@ class Renderer_Category extends Renderer_Object {
      * @param  array $options , [Optional] Adicional Options
      * @return array
     **/
-    public function contents( $page = 1, $options = array() ) {
-
+    public function contents( $page = 1, $options = array() ) 
+    {
         // Get Category Options and get current date.
         $options = array_merge_recursive( $this->options(), $options );
 
-        if ( $this->object->has_views() ) {
-
+        if ( $this->object->has_views() ) 
+        {
             $views = array();
-            foreach ( $this->object->views->get() as $view ) {
+            foreach ( $this->object->views->get() as $view ) 
+            {
                 $views[] = $view->dest_category_id;
             }
 
@@ -175,7 +286,8 @@ class Renderer_Category extends Renderer_Object {
                     )
                 );
         }
-        else {
+        else 
+        {
             $contents = new Content();
             $contents
                 ->where_related( 'categories', 'id' , $this->object->id )
@@ -188,7 +300,8 @@ class Renderer_Category extends Renderer_Object {
         }
 
         // Search Text.
-        if ( isset( $options['search_text'] ) && ! empty( $options['search_text'] ) ) {
+        if ( isset( $options['search_text'] ) && ! empty( $options['search_text'] ) ) 
+        {
             $contents
                 ->group_start()
                 ->or_like( 'name', $options['search_text'] )
@@ -210,28 +323,31 @@ class Renderer_Category extends Renderer_Object {
         }
 
         // Search by Keyword
-        if ( isset( $options['keyword'] ) && ! empty( $options['keyword'] ) ) {
+        if ( isset( $options['keyword'] ) && ! empty( $options['keyword'] ) ) 
+        {
             $contents
                 ->like( 'keywords', $options['keyword'])
             ;
         }
 
         // Filter by Key Value
-        if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) {
-
-            if ( is_array( $options['values']) ) {
+        if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) 
+        {
+            if ( is_array( $options['values']) ) 
+            {
                 $contents->group_start();
                 $contents->where_related( 'values', 'name', str_replace( '<>', '' , array_keys($options['values'])));
-                foreach ( $options['values'] as $field => $value ) {
-                $contents->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value );
+                foreach ( $options['values'] as $field => $value ) 
+                {
+                    $contents->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value );
                 }
                 $contents->group_end();
             }
-
         }
 
         // Exclude Categories by uriname
-        if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && !is_numeric($options['exclude']) ) {
+        if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && !is_numeric($options['exclude']) ) 
+        {
             $contents->where_subquery("NOT EXISTS ( 
                     select  1 
                       from  category_content cc
@@ -245,7 +361,8 @@ class Renderer_Category extends Renderer_Object {
             );
         } 
         // Exclude Contents by Id
-        else if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && is_numeric($options['exclude']) ) {
+        else if ( isset( $options['exclude'] ) && !empty( $options['exclude'] ) && is_numeric($options['exclude']) ) 
+        {
                 $contents->not_like('id', $options['exclude']);
         }
 
@@ -253,11 +370,12 @@ class Renderer_Category extends Renderer_Object {
         if ( isset( $options['random_contents'] ) )
             $contents->order_by( 'id', 'random' );
 
-        $contents->order_by( 'weight', 'asc' );
         $contents->order_by( 'publish_date', 'desc' );
+        $contents->order_by( 'weight', 'asc' );
 
         // Limit.
-        if ( isset( $options['max_contents'] ) ) {
+        if ( isset( $options['max_contents'] ) ) 
+        {
             $page = 1;
             $options['page_size'] = $options['max_contents'];
         }
@@ -269,8 +387,10 @@ class Renderer_Category extends Renderer_Object {
             );
 
         $data = array();
-        if ( $contents ) {
-            foreach ( $contents as $content ) {
+        if ( $contents ) 
+        {
+            foreach ( $contents as $content ) 
+            {
                 $content = $this->renderer->content( $content, $this->uripath );
                 $content = new Renderer_Content_List_Item( $this, $content );
                 array_push( $data, $content );
@@ -280,22 +400,22 @@ class Renderer_Category extends Renderer_Object {
         // Create an new Content List.
         return new Renderer_Content_List( $this, $data, $page, $contents->paged->page_size, $contents->paged->total_rows );
     }
-
-     /**
+ 
+    /**
      * tops: Get Top Contents.
      *
      * @access public
      * @param  array $options, [Optional] Options to filter results.
      * @return array
     **/
-    public function tops( $options = array() ) {
-
+    public function tops( $options = array() ) 
+    {
         // Get Category Options and get current date.
         $date    = date("Y-m-d H:i:s");
         $options = array_replace_recursive( $this->options(), $options );
 
-        if( $this->object->has_views() ) {
-
+        if( $this->object->has_views() ) 
+        {
             $views = array();
             foreach ( $this->object->views->get() as $view )
                 $views[] = $view->dest_category_id;
@@ -312,7 +432,8 @@ class Renderer_Category extends Renderer_Object {
                 )
                 ->order_by('counters_count DESC');
         }
-        else {
+        else 
+        {
             $contents = $this->object
                 ->contents
                 ->where( array(
@@ -334,9 +455,10 @@ class Renderer_Category extends Renderer_Object {
             $contents->limit( (int)$options['max_contents'] );
 
         $data = array();
-        if ( $contents ) {
-            foreach ( $contents->get() as $content ) {
-
+        if ( $contents ) 
+        {
+            foreach ( $contents->get() as $content ) 
+            {
                 $content = $this->renderer->content( $content, $this->uripath );
                 $content = new Renderer_Content_List_Item( $this, $content );
                 array_push( $data, $content );
@@ -351,16 +473,18 @@ class Renderer_Category extends Renderer_Object {
      * keywords: Gets contents keywords of the category 
      * 
      * @access public
-     * TODO: Replace Memory Calculation by Database 
-     * @param int $limit, [Required] Max number of returned keywords
+     * @param  int $limit, [Required] Max number of returned keywords
      * @return array
-     */
-    public function keywords( $limit = NULL, $options = array() ) {
+    **/
+    public function keywords( $limit = NULL, $options = array() ) 
+    {
         $contents = $this->contents(1, array( 'max_contents' => 999999999 ) );
         $keywords = array();
-        foreach ( $contents as $content ) {
+        foreach ( $contents as $content ) 
+        {
             $content = $content->object;
-            if ( !empty( $content->keywords ) ) {
+            if ( !empty( $content->keywords ) ) 
+            {
                 $keywords = array_merge_recursive( $keywords, explode(",", $content->keywords ) ); 
             }
         }
@@ -369,12 +493,14 @@ class Renderer_Category extends Renderer_Object {
         $keywords = array_unique($keywords);
 
         // Limit the number of keywords.
-        if ( !is_null( $limit ) ) {
+        if ( !is_null( $limit ) ) 
+        {
             shuffle($keywords);
             $keywords = array_slice ($keywords,0,$limit);
         }
 
-        if ( isset( $options['keyword'] ) && !empty($options['keyword']) ) {
+        if ( isset( $options['keyword'] ) && !empty($options['keyword']) ) 
+        {
             array_unshift($keywords, $options['keyword']);
             $keywords = array_unique($keywords);
         }
@@ -389,8 +515,8 @@ class Renderer_Category extends Renderer_Object {
      * @param  string $name, [Optional] Option name.
      * @return array
     **/
-    public function options( $name = null ) {
-
+    public function options( $name = null ) 
+    {
         // Get Combined Options for current category.
         $options = $this->object->combined_options();
 
@@ -401,21 +527,23 @@ class Renderer_Category extends Renderer_Object {
     }
 
     /**
-     * categories: Get Templates based on supported content types.
+     * templates: Get Templates based on supported content types.
      *
      * @access public
      * @return array
     **/
-    public function templates() {
-
+    public function templates() 
+    {
         $types = $this->object
             ->content_types
             ->where( array( 'active_flag' => 1 ) )
             ->order_by('name ASC');
 
         $data = array();
-        if ( $types ) {
-            foreach ( $types->get() as $type ) {
+        if ( $types ) 
+        {
+            foreach ( $types->get() as $type ) 
+            {
 
                 $type = new Renderer_Template( $type, $this->uripath, $this->renderer );
                 array_push( $data, $type );
@@ -432,8 +560,9 @@ class Renderer_Category extends Renderer_Object {
      * @param  string $name, [Required] Category name.
      * @return object
     **/
-    public function category( $name ) {
-        return $this->child_object( $name, 'category' );
+    public function category( $name ) 
+    {
+        return $this->_child_object( $name, 'category' );
     }
 
     /**
@@ -443,19 +572,21 @@ class Renderer_Category extends Renderer_Object {
      * @param  string $name, [Required] Content name.
      * @return object
     **/
-    public function content( $name ) {
-        return $this->child_object( $name, 'content' );
+    public function content( $name ) 
+    {
+        return $this->_child_object( $name, 'content' );
     }
 
     /**
-     * child_object: Get an child object (Category or Content).
+     * _child_object: Get an child object (Category or Content).
      *
      * @access public
      * @param  string $name, [Required] Object name.
      * @param  string $type, [Required] Object type.
      * @return object
     **/
-    private function child_object( $name, $type ) {
+    private function _child_object( $name, $type ) 
+    {
         $uripath = join( '/', $this->context_path() )  . '/' . $name ;
 
         return $this->renderer->$type( $uripath );
@@ -467,8 +598,8 @@ class Renderer_Category extends Renderer_Object {
      * @access public
      * @return array
     **/
-    public function rules() {
-
+    public function rules() 
+    {
         return array(
             join( '-', array( '_cat', $this->uriname ) ),
             '_cat',
