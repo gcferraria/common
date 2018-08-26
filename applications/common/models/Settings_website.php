@@ -11,6 +11,13 @@ class Settings_website extends DataMapper
             'join_self_as'   => 'settings_website',
             'join_other_as'  => 'i18n_language',
             'cascade_delete' => TRUE,
+        ),
+        'newsletter_templates' => array(
+            'class'          => 'newsletter_template',
+            'other_field'    => 'website',
+            'join_self_as'   => 'settings_website',
+            'join_other_as'  => 'newsletter_template',
+            'cascade_delete' => TRUE,
         )
     );
     var $has_one  = array(

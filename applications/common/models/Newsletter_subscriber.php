@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Newsletter_Contact extends DataMapper 
+class Newsletter_Subscriber extends DataMapper 
 {
-    var $table = 'newsletter_contact';
+    var $table = 'newsletter_subscriber';
 
     public $validation = array(
         'email' => array(

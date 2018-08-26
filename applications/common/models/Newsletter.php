@@ -10,10 +10,15 @@ class Newsletter extends DataMapper
             'join_table'    => 'category',
             'join_other_as' => 'creator',
         ),
+        'template' => array(
+            'other_field'   => 'newsletters',
+            'join_table'    => 'newsletter_template',
+            'join_other_as' => 'template',
+        )
     );
 
     public $validation = array(
-        'name' => array(
+        'subject' => array(
             'type'  => 'text',
             'rules' => array( 'required','trim' ),
         ),
@@ -21,11 +26,7 @@ class Newsletter extends DataMapper
             'type'  => 'select',
             'rules' => array('required','valid_email','trim'),
         ),
-        'template' => array(
-            'type'  => 'select',
-            'rules' => array('required','trim'),
-        ),
-        'website' => array(
+        'template_id' => array(
             'type'  => 'select',
             'rules' => array('required','trim'),
         ),
