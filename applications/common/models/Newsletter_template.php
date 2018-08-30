@@ -40,6 +40,10 @@ class Newsletter_Template extends DataMapper
             'type'  => 'text',
             'rules' => array('required'),
         ),
+        'is_active' => array(
+            'type'  => 'radiogroup',
+            'value' => '1',
+        ),
     );
 
 }
