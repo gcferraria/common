@@ -184,8 +184,8 @@ class Renderer_Category extends Renderer_Object {
                 ->where_in_related( 'categories', 'id' , $views )
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end();
         }
         else 
@@ -195,8 +195,8 @@ class Renderer_Category extends Renderer_Object {
                 ->where_related( 'categories', 'id' , $this->object->id )
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end();
         }
 
@@ -279,8 +279,8 @@ class Renderer_Category extends Renderer_Object {
                 ->where_in_related( 'categories', 'id' , $views )
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end();
         }
         else 
@@ -290,8 +290,8 @@ class Renderer_Category extends Renderer_Object {
                 ->where_related( 'categories', 'id' , $this->object->id )
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end();
         }
 
@@ -422,8 +422,8 @@ class Renderer_Category extends Renderer_Object {
                 ->include_related_count('counters')
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end()
                 ->order_by('counters_count DESC');
         }
@@ -433,8 +433,8 @@ class Renderer_Category extends Renderer_Object {
                 ->contents
                 ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
                 ->group_start()
-                ->where('disable_date <', date("Y-m-d H:i:s"))
-                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->where('disable_date >=', date("Y-m-d H:i:s"))
+                ->or_where('disable_date', '0000-00-00 00:00:00')
                 ->group_end()
                 ->include_related_count('counters')
                 ->order_by('counters_count DESC');
