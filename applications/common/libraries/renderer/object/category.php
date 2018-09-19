@@ -182,24 +182,22 @@ class Renderer_Category extends Renderer_Object {
             $contents = new $class();
             $contents
                 ->where_in_related( 'categories', 'id' , $views )
-                ->where( array(
-                        'publish_date <=' => date("Y-m-d H:i:s"),
-                        'disable_date <'  => date("Y-m-d H:i:s"),
-                        'publish_flag'    => 1,
-                    )
-                );
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end();
         }
         else 
         {
             $contents = new $class();
             $contents
                 ->where_related( 'categories', 'id' , $this->object->id )
-                ->where( array(
-                        'publish_date <=' => date("Y-m-d H:i:s"),
-                        'disable_date <'  => date("Y-m-d H:i:s"),
-                        'publish_flag'    => 1,
-                    )
-                );
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end();
         }
 
         // Order by.
@@ -279,24 +277,22 @@ class Renderer_Category extends Renderer_Object {
             $contents = new Content();
             $contents
                 ->where_in_related( 'categories', 'id' , $views )
-                ->where( array(
-                        'publish_date <=' => date("Y-m-d H:i:s"),
-                        'disable_date <'  => date("Y-m-d H:i:s"),
-                        'publish_flag'    => 1,
-                    )
-                );
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end();
         }
         else 
         {
             $contents = new Content();
             $contents
                 ->where_related( 'categories', 'id' , $this->object->id )
-                ->where( array(
-                        'publish_date <=' => date("Y-m-d H:i:s"),
-                        'disable_date <'  => date("Y-m-d H:i:s"),
-                        'publish_flag'    => 1,
-                    )
-                );
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end();
         }
 
         // Search Text.
@@ -424,24 +420,22 @@ class Renderer_Category extends Renderer_Object {
             $contents
                 ->where_in_related( 'categories', 'id' , $views )
                 ->include_related_count('counters')
-                ->where( array(
-                        'publish_date <=' => $date,
-                        'disable_date <'  => $date,
-                        'publish_flag'    => 1,
-                    )
-                )
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end()
                 ->order_by('counters_count DESC');
         }
         else 
         {
             $contents = $this->object
                 ->contents
-                ->where( array(
-                        'publish_date <=' => $date,
-                        'disable_date <'  => $date,
-                        'publish_flag'    => 1,
-                    )
-                )
+                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
+                ->group_start()
+                ->where('disable_date <', date("Y-m-d H:i:s"))
+                ->or_where('disable_date != ', '0000-00-00 00:00:00')
+                ->group_end()
                 ->include_related_count('counters')
                 ->order_by('counters_count DESC');
         }
