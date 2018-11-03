@@ -233,7 +233,7 @@ class Breadcrumb
                         $link .= '</a>';
                     }
                     else
-                        $link  = $crumb['text'];
+                        $link  = '<a href="JavaScript:Void(0)">' . $crumb['text'] . '</a>';
 
                     $this->_output .= $wrapper_inline[0] . $link . $wrapper_inline[1];
                 }
