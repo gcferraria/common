@@ -106,13 +106,17 @@ class Renderer_Category extends Renderer_Object {
      * categories: Get Children Categories.
      *
      * @access public
-     * @param  $options, Adicional options
+     * @param  int $page      , [Optional][Default=1] Page of contents.
+     * @param  array $options , [Optional] Adicional Options
      * @return array
     **/
-    public function categories($options = array()) {
+    public function categories($page = 1, $options = array()) {
 
-        $data = array();
+        // Merge global conditions with custom conditions.
         $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
+
+        // Get Category Options and get current date.
+        $options = array_merge_recursive( $this->options(), $options );
 
         if( $this->object->has_views() ) 
         {
@@ -136,16 +140,21 @@ class Renderer_Category extends Renderer_Object {
                 ->order_by('weight ASC');
         }
 
+        $data = array();
         if ( $children ) 
         {
-            foreach ( $children->get() as $child ) 
+            $children->get_paged( 
+                $page, ( isset($options['page_size']) ) ? $options['page_size'] : 25
+            );
+
+            foreach ( $children as $child ) 
             {
                 $child = new Renderer_Category_List_Item( $child, $this->renderer );
                 array_push( $data, $child );
             }
         }
 
-        return new Renderer_Category_List( $this, $data, null, null, null );
+        return new Renderer_Category_List( $this, $data, $page, $children->paged->page_size, $children->paged->total_rows );
     }
 
     /**
@@ -250,7 +259,7 @@ class Renderer_Category extends Renderer_Object {
         }
 
         // Create an new Content List.
-        return new Renderer_Content_List( $this, $data, null, null, null );
+        return new Renderer_Content_List( $this, $data, $page, $contents->paged->page_size, $contents->paged->total_rows );
     }
 
     /**
