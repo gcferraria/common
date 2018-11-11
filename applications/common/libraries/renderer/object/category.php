@@ -241,11 +241,18 @@ class Renderer_Category extends Renderer_Object {
             $options['page_size'] = $options['max_contents'];
         }
 
+        $page_size = 25;
+        if( isset( $options['contents_page_size'] ) )
+        {
+            $page_size = $options['contents_page_size'];
+        } 
+        elseif ( isset( $options['page_size'] ) ) 
+        {
+            $page_size = $options['page_size'];
+        }
+
         // Offset.
-        $contents->get_paged(
-            $page,
-            isset( $options['page_size'] ) ? $options['page_size'] : 25
-        );
+        $contents->get_paged( $page, $page_size );
 
         $data = array();
         if ( $contents ) 
@@ -385,11 +392,18 @@ class Renderer_Category extends Renderer_Object {
             $options['page_size'] = $options['max_contents'];
         }
 
+        $page_size = 25;
+        if( isset( $options['contents_page_size'] ) )
+        {
+            $page_size = $options['contents_page_size'];
+        } 
+        elseif ( isset( $options['page_size'] ) ) 
+        {
+            $page_size = $options['page_size'];
+        }
+
         // Offset.
-        $contents->get_paged(
-                $page,
-                isset( $options['page_size'] ) ? $options['page_size'] : 25
-            );
+        $contents->get_paged( $page, $page_size );
 
         $data = array();
         if ( $contents ) 
