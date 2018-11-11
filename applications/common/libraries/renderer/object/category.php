@@ -244,10 +244,20 @@ class Renderer_Category extends Renderer_Object {
         $page_size = 25;
         if( isset( $options['contents_page_size'] ) )
         {
+            if ( is_array( $options['contents_page_size'] ) ) 
+            {
+                $options['contents_page_size'] = array_pop( $options['contents_page_size'] );
+            }
+
             $page_size = $options['contents_page_size'];
         } 
         elseif ( isset( $options['page_size'] ) ) 
         {
+            if ( is_array( $options['page_size'] ) ) 
+            {
+                $options['page_size'] = array_pop( $options['page_size'] );
+            }
+            
             $page_size = $options['page_size'];
         }
 
@@ -395,10 +405,20 @@ class Renderer_Category extends Renderer_Object {
         $page_size = 25;
         if( isset( $options['contents_page_size'] ) )
         {
+            if ( is_array( $options['contents_page_size'] ) ) 
+            {
+                $options['contents_page_size'] = array_pop( $options['contents_page_size'] );
+            }
+
             $page_size = $options['contents_page_size'];
         } 
         elseif ( isset( $options['page_size'] ) ) 
         {
+            if ( is_array( $options['page_size'] ) ) 
+            {
+                $options['page_size'] = array_pop( $options['page_size'] );
+            }
+            
             $page_size = $options['page_size'];
         }
 
