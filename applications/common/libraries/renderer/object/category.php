@@ -234,10 +234,12 @@ class Renderer_Category extends Renderer_Object {
             }
         }
 
+        // Page
+        $page = isset( $options['page'] ) ? $options['page'] : 1;
+
         // Limit.
         if ( isset( $options['max_contents'] ) ) 
         {
-            $page = 1;
             $options['page_size'] = $options['max_contents'];
         }
 
