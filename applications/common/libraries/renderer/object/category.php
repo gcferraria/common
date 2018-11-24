@@ -223,7 +223,7 @@ class Renderer_Category extends Renderer_Object {
         }
 
         // Filter by Key Value
-        if ( isset( $options['values'] ) && ! empty( $options['values'] ) ) 
+        if ( isset( $options['values'] ) && !empty( $options['values'] ) ) 
         {
             if ( is_array( $options['values']) ) 
             {
@@ -232,6 +232,16 @@ class Renderer_Category extends Renderer_Object {
                     $contents->where( $field, $value );
                 }
             }
+        }
+
+        // Search by text
+        if ( isset( $options['search_text'] ) && is_array( $options['search_text'] ) && !empty( $options['search_text'] ) ) 
+        {
+            $contents->group_start();
+            foreach( $options['search_text'] as $field => $value ) {
+                $contents->or_like( $field, $value );
+            }
+            $contents->group_end();
         }
 
         // Page
