@@ -106,3 +106,38 @@ if ( !function_exists('get_spent_hours') )
 		return $now->diff( $date );
 	}
 }
+
+/**
+  * get_how_many_time_exists: Get how many one date exists.
+  *
+  * @access public
+  * @param  string  $date, [Required] Date to check diference.
+  * @return string
+**/
+if ( !function_exists('get_how_many_time_exists') ) 
+{
+	function get_how_many_time_exists( $date ) 
+	{
+		$CI =& get_instance();
+
+		$now  = new DateTime( date('Y-m-d H:i:s') );
+    	$date = new DateTime( date('Y-m-d H:i:s', strtotime( $date ) ) );
+
+		$diff = $now->diff( $date );
+
+		if ( $diff->y >= 1 )
+            $time = $diff->y . ' ' .$CI->lang->line('years');
+        elseif ( $diff->m >= 1 )
+            $time = $diff->m . ' ' .$CI->lang->line('months');
+        elseif ( $diff->d >= 1 )
+            $time = $diff->d . ' ' . $CI->lang->line('days');
+        elseif ( $diff->h >= 1 )
+            $time = $diff->h . ' ' .$CI->lang->line('hours');
+        elseif ( $diff->i >= 1 )
+            $time = $diff->i . ' ' .$CI->lang->line('minutes');
+        else
+			$time = $CI->lang->line('right_now');
+			
+		return $time;
+	}
+}
