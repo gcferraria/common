@@ -19,12 +19,12 @@ if ( !function_exists('extensive_date') )
 		$CI =& get_instance();
 
 		// Parse Day and Month
-		$months       = $CI->lang->line('months');
+		$months       = $CI->lang->line('extensive_months');
 		$day          = date('d', strtotime( $date ) );
 		$month        = date('m', strtotime( $date ) );
 		$year         = date('Y', strtotime( $date ) );
 		$hour         = date('H', strtotime( $date ) );
-		$minutes      = date('s', strtotime( $date ) );
+		$minutes      = date('i', strtotime( $date ) );
 
 		return sprintf (
             ( $time ) ? '%d de %s de %d às %s:%s' : '%d de %s de %d',
@@ -34,6 +34,30 @@ if ( !function_exists('extensive_date') )
 			$hour,
 			$minutes
         );
+	}
+}
+
+/**
+  * extract_time: Extract Time from datetime.
+  *
+  * @access public
+  * @param  string  $date, [Optional] [Default=null] Date to extract.
+  * @return string
+**/
+if ( !function_exists('extract_time') ) 
+{
+	function extract_time( $date = null ) 
+	{
+		if ( $date == null )
+			$date = date('Y-m-d H:i:s');
+
+		$CI =& get_instance();
+
+		// Parse Hour and minutes
+		$hour    = date('H', strtotime( $date ) );
+		$minutes = date('i', strtotime( $date ) );
+
+		return sprintf('%s:%s', $hour, $minutes);
 	}
 }
 
@@ -59,7 +83,7 @@ if ( !function_exists('short_date') )
 		$month        = date('m', strtotime( $date ) );
 		$year         = date('Y', strtotime( $date ) );
 		$hour         = date('H', strtotime( $date ) );
-		$minutes      = date('s', strtotime( $date ) );
+		$minutes      = date('i', strtotime( $date ) );
 
 		return sprintf( '%s/%d', $months[ $month ], $year );
 	}
