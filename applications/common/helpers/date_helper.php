@@ -78,7 +78,7 @@ if ( !function_exists('short_date') )
 		$CI =& get_instance();
 
 		// Parse Day and Month
-		$months       = $CI->lang->line('months');
+		$months       = $CI->lang->line('short_months');
 		$day          = date('d', strtotime( $date ) );
 		$month        = date('m', strtotime( $date ) );
 		$year         = date('Y', strtotime( $date ) );
