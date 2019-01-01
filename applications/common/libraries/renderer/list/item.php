@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_List_Item Class
@@ -82,6 +83,3 @@ class Renderer_List_Item {
         );
     }
 }
-
-/* End of file item.php */
-/* Location: ./applications/common/libraries/renderer/list/item.php */

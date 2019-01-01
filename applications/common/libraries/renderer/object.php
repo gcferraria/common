@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_Object Class
@@ -103,6 +104,3 @@ class Renderer_Object {
         );
     }
 }
-
-/* End of file object.php */
-/* Location: ./applications/common/libraries/renderer/object.php */

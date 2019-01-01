@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_Content_List Class
@@ -45,6 +46,3 @@ class Renderer_Content_List extends Renderer_List {
     }
     
 }
-
-/* End of file list.php */
-/* Location: ../applications/common/libraries/renderer/object/content/list.php */

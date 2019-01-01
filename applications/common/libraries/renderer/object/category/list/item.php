@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_Category_List_Item Class
@@ -33,6 +34,3 @@ class Renderer_Category_List_Item extends Renderer_Category {
     }
     
 }
-
-/* End of file item.php */
-/* Location: ./applications/common/libraries/renderer/object/category/list/item.php */

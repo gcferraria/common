@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_Template Class
@@ -74,6 +75,3 @@ class Renderer_Template extends Renderer_Object {
     }
     
 }
-
-/* End of file template.php */
-/* Location: ./applications/common/libraries/renderer/object/template.php */

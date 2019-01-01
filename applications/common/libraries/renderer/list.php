@@ -1,4 +1,5 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Renderer_List Class
@@ -123,6 +124,3 @@ class Renderer_List extends ArrayObject {
         );
     }
 }
-
-/* End of file list.php */
-/* Location: ../applications/common/libraries/renderer/list.php */
