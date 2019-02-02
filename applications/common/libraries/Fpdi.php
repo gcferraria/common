@@ -21,11 +21,11 @@ define('FPDI_VERSION', '1.4.4');
 
 // Check for TCPDF and remap TCPDF to FPDF
 if (class_exists('TCPDF', false)) {
-    require_once('fpdi2tcpdf_bridge.php');
+    require_once('fpdi/fpdi2tcpdf_bridge.php');
 }
 
-require_once('fpdf_tpl.php');
-require_once('fpdi_pdf_parser.php');
+require_once('fpdi/fpdf_tpl.php');
+require_once('fpdi/fpdi_pdf_parser.php');
 
 
 class FPDI extends FPDF_TPL {
