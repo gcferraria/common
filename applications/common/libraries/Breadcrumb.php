@@ -114,7 +114,7 @@ class Breadcrumb
         $this->_load_language();
 
         // Inicialize breadcrumbs properties.
-        $this->_home_text      = $this->lang->line('home');
+        $this->_home_text      = lang('home');
         $this->_home_icon      = $this->_config['home_icon'];
         $this->_home_link      = $this->_config['home_link'];
         $this->_divider        = $this->_config['divider'];

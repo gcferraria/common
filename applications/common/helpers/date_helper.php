@@ -19,7 +19,7 @@ if ( !function_exists('extensive_date') )
 		$CI =& get_instance();
 
 		// Parse Day and Month
-		$months       = $CI->lang->line('extensive_months');
+		$months       = lang('extensive_months');
 		$day          = date('d', strtotime( $date ) );
 		$month        = date('m', strtotime( $date ) );
 		$year         = date('Y', strtotime( $date ) );
@@ -78,7 +78,7 @@ if ( !function_exists('short_date') )
 		$CI =& get_instance();
 
 		// Parse Day and Month
-		$months       = $CI->lang->line('short_months');
+		$months       = $CI->lang('short_months');
 		$day          = date('d', strtotime( $date ) );
 		$month        = date('m', strtotime( $date ) );
 		$year         = date('Y', strtotime( $date ) );
@@ -126,17 +126,17 @@ if ( !function_exists('get_how_many_time_exists') )
 		$diff = $now->diff( $date );
 
 		if ( $diff->y >= 1 )
-            $time = $diff->y . ' ' .$CI->lang->line('years');
+            $time = $diff->y . ' ' .$CI->lang('years');
         elseif ( $diff->m >= 1 )
-            $time = $diff->m . ' ' .$CI->lang->line('months');
+            $time = $diff->m . ' ' .$CI->lang('months');
         elseif ( $diff->d >= 1 )
-            $time = $diff->d . ' ' . $CI->lang->line('days');
+            $time = $diff->d . ' ' . $CI->lang('days');
         elseif ( $diff->h >= 1 )
-            $time = $diff->h . ' ' .$CI->lang->line('hours');
+            $time = $diff->h . ' ' .$CI->lang('hours');
         elseif ( $diff->i >= 1 )
-            $time = $diff->i . ' ' .$CI->lang->line('minutes');
+            $time = $diff->i . ' ' .$CI->lang('minutes');
         else
-			$time = $CI->lang->line('right_now');
+			$time = $CI->lang('right_now');
 			
 		return $time;
 	}

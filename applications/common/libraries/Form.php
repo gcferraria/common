@@ -205,7 +205,7 @@ class Form
 
             // Check if label exists.
             if ( !isset( $field['label'] ) && isset( $this->attributes['data-model'] ) ) 
-                $field['label'] = $this->lang->line( $this->attributes['data-model'] . '_' . $name);
+                $field['label'] = lang( $this->attributes['data-model'] . '_' . $name);
 
             // Add the field Object to the list of form fields.
             $this->fields[ $name ] = $field;
