@@ -19,9 +19,13 @@ class Newsletter_Subscriber extends DataMapper
             'rules' => array('trim'),
         ),
         'active_flag' => array(
-            'type'  => 'radiogroup',
-            'value' => '1',
+            'type'  => 'select',
+            'value' => '-1',
         ),
+        'activation_token' => array(
+            'type'  => 'text',
+            'rules' => array('trim'),
+        )
     );
 
 }
