@@ -28,6 +28,10 @@ class I18n_Language extends DataMapper
             'type'  => 'text',
             'rules' => array('required'),
         ),
+        'region' => array(
+            'type'  => 'text',
+            'rules' => array('required'),
+        ),
         'active' => array(
             'type'   => 'radiogroup',
             'rules'  => array('required'),
