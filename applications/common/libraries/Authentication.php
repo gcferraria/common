@@ -29,8 +29,8 @@
  * @package CodeIgniter
  * @subpackage Libraries
  * @category   Authentication
- * @author  Gon√ßalo Ferraria <gferraria@gmail.com>
- * @copyright   2011 - 2016 Gon√ßalo Ferraria
+ * @author  GonÁalo Ferraria <gferraria@gmail.com>
+ * @copyright   2011 - 2016 GonÁalo Ferraria
  * @license http://opensource.org/licenses/MIT  MIT License
  * @link    https://codeigniter.com
  * @since   Version 1.0 form.php 2016-05-29 gferraria $
@@ -184,8 +184,7 @@ class Authentication
             
             if ( $administrator->exists() ) 
             {
-                $this->CI->load->helper('string');
-                $password = random_string('alnum', 8 );
+                $password = mt_rand(); 
                 $administrator->password = $password;
 
                 // Save user data.
