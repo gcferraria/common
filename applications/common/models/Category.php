@@ -141,8 +141,10 @@ class Category extends DataMapper
         $parents = array();
         $parent  = $this->caller->get();
 
-        if ( $parent->exists() )
+        if( $parent->exists() ) 
+        {
             $parents = array_merge( $parent->_parents(), $parents );
+        }
 
         array_push( $parents, $this );
 
@@ -158,8 +160,10 @@ class Category extends DataMapper
     public function path_uriname_array() 
     {
         $path = array();
-        foreach ( $this->parents() as $parent )
+        foreach( $this->parents() as $parent ) 
+        {
             $path[] = $parent->uriname;
+        }
 
         return $path;
     }
@@ -173,8 +177,10 @@ class Category extends DataMapper
     public function path_name_array() 
     {
         $path = array();
-        foreach ( $this->parents() as $parent )
+        foreach( $this->parents() as $parent )
+        {
             $path[] = $parent->name;
+        }
 
         return $path;
     }
@@ -188,10 +194,12 @@ class Category extends DataMapper
     public function path() 
     {
         $path_array = $this->path_uriname_array();
-        $path       = implode('/', $path_array );
+        $path = implode('/', $path_array );
 
-        if ( sizeof( $path_array ) > 0 )
+        if( sizeof( $path_array ) > 0 ) 
+        {
             $path = '/' . $path . '/';
+        }
 
         return $path;
     }
@@ -207,40 +215,44 @@ class Category extends DataMapper
      **/
     public function save( $object = '', $relation = '' ) 
     {
-        if( empty( $object ) )
+        if( empty( $object ) ) 
+        {
             return parent::save( $object, $relation );
+        }
 
         // Start Transaction
         $this->trans_begin();
 
         if( is_array($object) && !empty($object) ) 
         {
-           if ( isset ( $object['views'] ) ) 
-           {
+           if( isset( $object['views'] ) ) 
+            {
                 $views = $object['views'];
-                unset ( $object['views'] );
+                unset( $object['views'] );
             }
 
             // If exists Content Types Delete All.
-            if ( $this->content_types->count() > 0 ) 
+            if( $this->content_types->count() > 0 ) 
             {
                 $objects = $this->content_types->get();
                 $this->delete( $objects->all, 'content_types' );
             }
 
             // Associate Content Types to Category.
-            if ( $ids = $object['content_types'] ) 
+            if( $ids = $object['content_types'] ) 
             {
-                if ( !empty( $ids ) ) 
+                if( !empty( $ids ) ) 
                 {
                     $content_types = array();
-                    foreach ( $ids as $content_type ) 
+                    foreach( $ids as $content_type ) 
                     {
                         $new = new Content_Type();
                         $new->get_by_id( $content_type );
 
-                        if ( !$new->exists() )
+                        if( !$new->exists() ) 
+                        {
                             continue;
+                        }
 
                         array_push( $content_types, $new );
                     }
@@ -252,13 +264,15 @@ class Category extends DataMapper
             parent::save( $object, $relation );
 
             // Fisrt Delete All Categories Views associated at this category.
-            foreach ( $this->views->get() as $view )
+            foreach( $this->views->get() as $view ) 
+            {
                 $view->delete();
+            }
 
             // Second create the relations.
-            if ( !empty ( $views ) ) 
+            if( !empty( $views ) ) 
             {
-                foreach ( $views as $id ) 
+                foreach( $views as $id ) 
                 {
                     $category = new Category_View();
                     $category->category_id = $this->id;
@@ -270,7 +284,7 @@ class Category extends DataMapper
         }
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -303,13 +317,13 @@ class Category extends DataMapper
         $this->trans_begin();
 
         // Delete Your Contents.
-        foreach ( $this->contents->get() as $content ) 
+        foreach( $this->contents->get() as $content ) 
         {
             $content->delete( array('category' => $this->id ) );
         }
 
         // Delete Childrens.
-        foreach ( $this->childrens->get() as $children ) 
+        foreach( $this->childrens->get() as $children ) 
         {
             $children->delete();
         }
@@ -317,7 +331,7 @@ class Category extends DataMapper
         parent::delete();
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -341,24 +355,24 @@ class Category extends DataMapper
     **/
     public function inherited_options() 
     {
-        // Get my parent categories.
-        $parents = $this->parents();
-
-        // Remove last position of array, corresponding to me.
-        array_pop( $parents );
+        $category_option = new Category_option();
+        $category_option->query("
+            SELECT  o.*
+              FROM  category_option o
+                ,   category c
+             WHERE  o.category_id = c.id
+               AND  o.inheritable = 1
+               AND  c.id <> " . $this->id . "
+               AND  '".$this->uripath."' LIKE concat( '','%', c.uripath,'%','')
+        ");
 
         $options = array();
-        foreach ( $parents as $parent ) 
+        foreach( $category_option as $option ) 
         {
-            // Get only inheritable options.
-            $inherited = $parent->options->get_where(
-                array( 'inheritable' => 1 )
-            );
-
-            foreach ( $inherited as $option )
-                $options[ $option->name ] = $option->value;
+            $options[ $option->name ] = $option->value;
         }
 
+        unset( $category_option );
         return $options;
     }
 
@@ -371,9 +385,38 @@ class Category extends DataMapper
     public function own_options() 
     {
         $options = array();
-        foreach ( $this->options->get() as $option )
+        foreach( $this->options->get() as $option ) 
+        {
             $options[ $option->name ] = $option->value;
+        }
 
+        return $options;
+    }
+
+    /**
+     * inherited_options: Get inherited Options.
+     *
+     * @access public
+     * @return array
+    **/
+    public function all_options() 
+    {
+        $category_option = new Category_option();
+        $category_option->query("
+            SELECT  o.*
+              FROM  category_option o
+                ,   category c
+             WHERE  o.category_id = c.id
+               AND  '".$this->uripath."' LIKE concat( '','%', c.uripath,'%','')
+        ");
+
+        $options = array();
+        foreach( $category_option as $option ) 
+        {
+            $options[ $option->name ] = $option->value;
+        }
+
+        unset( $category_option );
         return $options;
     }
 
@@ -425,9 +468,12 @@ class Category extends DataMapper
         ");
 
         $lang = array();
-        foreach ( $languages as $language )
+        foreach( $languages as $language )
+        {
             $lang[] = $language;
+        }
 
+        unset( $languages );
         return $lang;
     }
 
@@ -440,10 +486,12 @@ class Category extends DataMapper
     public function translatable_fields() 
     {
         $fields = array();
-        foreach ( $this->validation as $name => $value ) 
+        foreach( $this->validation as $name => $value ) 
         {
-            if ( isset( $value['translatable'] ) )
+            if( isset( $value['translatable'] ) ) 
+            {
                 $fields[ $name ] = $value;
+            }
         }
 
         return $fields;
@@ -459,8 +507,10 @@ class Category extends DataMapper
     public function translatable_values( $language ) 
     {
         $values = array();
-        foreach ( $this->translations->where('language_id', $language->id )->get() as $value )
+        foreach( $this->translations->where('language_id', $language->id )->get() as $value ) 
+        {
             $values[ $value->name ] = $value->value;
+        }
 
         return $values;
     }
@@ -478,13 +528,16 @@ class Category extends DataMapper
         $fields = array( 'id', 'name', 'uriname', 'description', 'image', 'weight', 'publish_flag', 'listed', 'exposed', 'last_update_date' );
 
         $data = array();
-        foreach( $fields as $field )
-            $data[ $field ] = $this->$field;
-
-        if ( !empty( $language ) ) 
+        foreach( $fields as $field ) 
         {
-            foreach ( $this->translatable_values( $language ) as $key => $value )
+            $data[ $field ] = $this->$field;
+        }
+
+        if( !empty( $language ) ) 
+        {
+            foreach( $this->translatable_values( $language ) as $key => $value ) {
                 $data[ $key ] = $value;
+            }
         }
 
         return $data;

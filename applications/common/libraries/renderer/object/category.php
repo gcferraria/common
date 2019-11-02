@@ -117,7 +117,7 @@ class Renderer_Category extends Renderer_Object {
         $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
 
         // Get Category Options and get current date.
-        $options = array_merge_recursive( $this->options(), $options );
+        //$options = array_merge_recursive( $this->options(), $options );
 
         if( $this->object->has_views() ) 
         {
@@ -568,7 +568,7 @@ class Renderer_Category extends Renderer_Object {
     public function options( $name = null ) 
     {
         // Get Combined Options for current category.
-        $options = $this->object->combined_options();
+        $options = $this->object->all_options();
 
         if ( !is_null( $name ) )
             return ( isset( $options[ $name ] ) ) ? $options[ $name ] : false ;

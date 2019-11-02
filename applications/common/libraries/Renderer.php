@@ -61,7 +61,13 @@ class Renderer {
     public $i18n;
 
     /**
-     * @var string, language
+     * @var string, language code
+     * @access private
+     */
+    private $language_code;
+
+    /**
+     * @var object, language object
      * @access private
      */
     private $language;
@@ -250,7 +256,7 @@ class Renderer {
      */
     public function set_language( $language ) 
     {
-        $this->language = $language;
+        $this->language_code = $language;
     }
 
     /**
@@ -260,8 +266,13 @@ class Renderer {
      */
     public function get_language() 
     {
-        $language = new I18n_Language();
-        return $language->get_by_code( $this->language );
+        if( $this->language != null && $this->language_code == $this->language->code ) 
+        {
+            return $this->language;
+        }
+
+        $this->language = new I18n_Language();
+        return $this->language->get_by_code( $this->language_code );
     }
 
 }

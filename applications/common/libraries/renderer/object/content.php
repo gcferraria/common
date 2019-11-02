@@ -185,21 +185,17 @@ class Renderer_Content extends Renderer_Object {
     public function isTop( $length = 5 ) {
         $content = new Content();
         $content->query("
-            SELECT  *
-              FROM  content c 
-                ,   (
-                    SELECT  content_id
-                        ,   COUNT(1)
-                      FROM  content_counter
-                     WHERE  1=1
-                     GROUP  BY content_id
-                    HAVING  COUNT(1) > 0
-                     ORDER  BY COUNT(1) DESC
-                     LIMIT  " . $length . "
-                ) t
-            WHERE 1=1
-              AND c.id = t.content_id
-              AND c.id = " . $this->object->id . "
+        SELECT  *
+        FROM  content c 
+          ,   (
+              SELECT  content_id
+                FROM  content_tops_mv
+               ORDER  BY views DESC
+               LIMIT  " . $length . "
+          ) t
+      WHERE 1=1
+        AND c.id = t.content_id
+        AND c.id = " . $this->object->id . "
         ");
 
         return ($content->exists());
