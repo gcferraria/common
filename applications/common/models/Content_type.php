@@ -60,13 +60,15 @@ class Content_Type extends DataMapper
 
         // Check if exists content for this content type and .
         // if exists Contents delete all.
-        foreach ( $this->contents->get() as $content )
+        foreach( $this->contents->get() as $content ) 
+        {
             $content->delete();
+        }    
 
         parent::delete( $object, $related_field );
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -94,13 +96,15 @@ class Content_Type extends DataMapper
         $fields = $this->content_type_fields;
 
         $data = array();
-        foreach ( $fields->get() as $field ) 
+        foreach( $fields->get() as $field ) 
         {
             // Define Field Rules.
             $rules = array();
 
-            if ( $field->required ) // Required Rules.
+            if( $field->required ) // Required Rules.
+            { 
                 array_push( $rules, 'required' );
+            }
 
             $data[ $field->name ] = array(
                 'field'        => $field->name,
@@ -113,27 +117,27 @@ class Content_Type extends DataMapper
             );
 
             // Parse Adicional Args.
-            if ( $args = $field->args ) 
+            if( $args = $field->args ) 
             {
                 $lines = explode( '\r\n|\n', $args );
                 if( isset($lines) and $lines[0] == $args)
                     $lines = explode("|", $args);
 
-                if ( is_array( $lines ) && sizeof( $lines ) > 0 ) 
+                if( is_array( $lines ) && sizeof( $lines ) > 0 ) 
                 {
-                    foreach ( $lines as $line ) 
+                    foreach( $lines as $line ) 
                     {
                         list( $name, $value ) = explode( '=', $line );
 
                         $values = explode( ',', $value );
-                        if ( is_array( $values ) && sizeof( $values ) > 0 ) 
+                        if( is_array( $values ) && sizeof( $values ) > 0 ) 
                         {
                             $temp = array();
                             foreach( $values as $value ) 
                             {
                                 $value = explode( ':', $value );
 
-                                if ( isset( $value[1] ) || ( isset( $value[1] ) && $value[1] == 0 ) )
+                                if( isset( $value[1] ) || ( isset( $value[1] ) && $value[1] == 0 ) )
                                     $temp[ $value[0] ] = $value[1];
                                 else
                                     $temp[] = $value[0];
@@ -165,10 +169,12 @@ class Content_Type extends DataMapper
     {
         $fields = $this->fields();
 
-        foreach ( $fields as $name => $attrs ) 
+        foreach( $fields as $name => $attrs ) 
         {
-            if ( $attrs['translatable'] == 0 )
+            if( $attrs['translatable'] == 0 ) 
+            {
                 unset( $fields[$name] );
+            }    
         }
 
         return $fields;

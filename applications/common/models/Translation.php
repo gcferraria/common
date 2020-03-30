@@ -44,8 +44,10 @@ class Translation extends DataMapper
     public function as_name_value_array() 
     {
         $values = array();
-        foreach ( $this->values->get() as $value )
+        foreach( $this->values->get() as $value ) 
+        {
             $values[ $value->name ] = $value->value;
+        }    
 
         return $values;
     }

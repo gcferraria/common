@@ -9,12 +9,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   * @param  boolean $time, [Optional] [Default=true] Show/Hide Time in Result String.
   * @return string
 **/
-if ( !function_exists('extensive_date') ) 
+
+if( !function_exists('extensive_date') ) 
 {
 	function extensive_date( $date = null, $time = true ) 
 	{
-		if ( $date == null )
-			$date = date('Y-m-d H:i:s');
+        if( $date == null ) 
+        {
+            $date = date('Y-m-d H:i:s');
+        }
 
 		$CI =& get_instance();
 
@@ -26,8 +29,7 @@ if ( !function_exists('extensive_date') )
 		$hour         = date('H', strtotime( $date ) );
 		$minutes      = date('i', strtotime( $date ) );
 
-		return sprintf (
-            ( $time ) ? '%d de %s de %d às %s:%s' : '%d de %s de %d',
+		return sprintf(( $time ) ? '%d de %s de %d às %s:%s' : '%d de %s de %d',
             $day,
             $months[ $month ],
 			$year,
@@ -44,12 +46,15 @@ if ( !function_exists('extensive_date') )
   * @param  string  $date, [Optional] [Default=null] Date to extract.
   * @return string
 **/
-if ( !function_exists('extract_time') ) 
+
+if( !function_exists('extract_time') ) 
 {
 	function extract_time( $date = null ) 
 	{
-		if ( $date == null )
-			$date = date('Y-m-d H:i:s');
+		if( $date == null ) 
+        {
+            $date = date('Y-m-d H:i:s');
+        }
 
 		$CI =& get_instance();
 
@@ -68,12 +73,15 @@ if ( !function_exists('extract_time') )
   * @param  string  $date, [Optional] [Default=null] Date to convert.
   * @return string
 **/
-if ( !function_exists('short_date') ) 
+
+if( !function_exists('short_date') ) 
 {
 	function short_date( $date = null ) 
 	{
-		if ( $date == null )
-			$date = date('Y-m-d H:i:s');
+		if( $date == null ) 
+        {
+            $date = date('Y-m-d H:i:s');
+        }
 
 		$CI =& get_instance();
 
@@ -96,7 +104,8 @@ if ( !function_exists('short_date') )
   * @param  string  $date, [Required] Date to check diference.
   * @return DateInterval
 **/
-if ( !function_exists('get_spent_hours') ) 
+
+if( !function_exists('get_spent_hours') ) 
 {
 	function get_spent_hours( $date ) 
 	{
@@ -114,7 +123,8 @@ if ( !function_exists('get_spent_hours') )
   * @param  string  $date, [Required] Date to check diference.
   * @return string
 **/
-if ( !function_exists('get_how_many_time_exists') ) 
+
+if( !function_exists('get_how_many_time_exists') ) 
 {
 	function get_how_many_time_exists( $date ) 
 	{
@@ -125,15 +135,15 @@ if ( !function_exists('get_how_many_time_exists') )
 
 		$diff = $now->diff( $date );
 
-		if ( $diff->y >= 1 )
+		if( $diff->y >= 1 )
             $time = $diff->y . ' ' .$CI->lang->line('years');
-        elseif ( $diff->m >= 1 )
+        elseif( $diff->m >= 1 )
             $time = $diff->m . ' ' .$CI->lang->line('months');
-        elseif ( $diff->d >= 1 )
+        elseif( $diff->d >= 1 )
             $time = $diff->d . ' ' . $CI->lang->line('days');
-        elseif ( $diff->h >= 1 )
+        elseif( $diff->h >= 1 )
             $time = $diff->h . ' ' .$CI->lang->line('hours');
-        elseif ( $diff->i >= 1 )
+        elseif( $diff->i >= 1 )
             $time = $diff->i . ' ' .$CI->lang->line('minutes');
         else
 			$time = $CI->lang->line('right_now');

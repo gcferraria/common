@@ -100,34 +100,36 @@ class Content extends DataMapper
         $this->trans_begin();
 
         $values = array();
-        if ( is_array( $object ) && !empty ( $object ) ) 
+        if( is_array( $object ) && !empty( $object ) ) 
         {
-            if ( isset ( $object['values'] ) ) 
+            if( isset( $object['values'] ) ) 
             {
                 $values = $object['values'];
-                unset ( $object['values'] );
+                unset( $object['values'] );
             }
 
-            if ( $ids = $object['categories'] ) 
+            if( $ids = $object['categories'] ) 
             {
                 // If exists Categories Delete All.
-                if ( $this->categories->count() > 0 ) 
+                if( $this->categories->count() > 0 ) 
                 {
                     $objects = $this->categories->get();
                     $this->delete( $objects->all, 'categories' );
                 }
 
                 // Associate Categories to Content.
-                if ( !empty( $ids ) ) 
+                if( !empty( $ids ) ) 
                 {
                     $categories = array();
-                    foreach ( $ids as $id ) 
+                    foreach( $ids as $id ) 
                     {
                         $category = new Category();
                         $category->get_by_id( $id );
 
-                        if ( !$category->exists() )
+                        if( !$category->exists() ) 
+                        {
                             continue;
+                        }    
 
                         array_push( $categories, $category );
                     }
@@ -139,14 +141,14 @@ class Content extends DataMapper
 
         parent::save( $object, $relation );
 
-        if ( !empty ( $values ) ) 
+        if( !empty( $values ) ) 
         {
             # Get Content Type Object.
             $content_type = $this->content_type->get();
 
             // Foreach Content Type Field insert content value.
             $fields = $content_type->content_type_fields;
-            foreach ( $fields->get() as $field ) 
+            foreach( $fields->get() as $field ) 
             {
                 // Initialize new Content Value Object.
                 $content_value = new Content_Value();
@@ -159,7 +161,7 @@ class Content extends DataMapper
                     )
                 )->get();
 
-                if ( $content_value->exists() ) // Update Content Value. 
+                if( $content_value->exists() ) // Update Content Value. 
                 { 
                     // Update Value.
                     $content_value->value = $values[ $field->name ];
@@ -179,7 +181,7 @@ class Content extends DataMapper
         }
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -210,16 +212,16 @@ class Content extends DataMapper
         // Start Transaction
         $this->trans_begin();
 
-        if ( is_array( $object ) && !empty ( $object ) ) 
+        if( is_array( $object ) && !empty( $object ) ) 
         {
-            if ( isset ( $object['category'] ) ) 
+            if( isset( $object['category'] ) ) 
             {
                 // Get Current Category Id.
                 $id = $object['category'];
-                unset ( $object['category'] );
+                unset( $object['category'] );
 
                 // checks if there are more categories associated with this content.
-                if ( $this->categories->count() > 1 ) 
+                if( $this->categories->count() > 1 ) 
                 {
                     // deletes only the relationship with the current category.
                     $category = $this->categories->where(
@@ -238,7 +240,7 @@ class Content extends DataMapper
         parent::delete( $object, $related_field );
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -263,7 +265,7 @@ class Content extends DataMapper
     public function as_name_value_array() 
     {
         $values = array();
-        foreach ( $this->values->get() as $value ) 
+        foreach( $this->values->get() as $value ) 
         {
             $values[ $value->name ] = $value->value;
         }
@@ -285,18 +287,18 @@ class Content extends DataMapper
     **/
     public function status() 
     {
-        if ( $this->publish_flag == 0 )
+        if( $this->publish_flag == 0 )
             return -1;
         else 
         {
-            if (
+            if(
                 $this->disable_date <= date('Y-m-d H:i:s') &&
                 $this->disable_date != '0000-00-00 00:00:00'
             ) 
             {
                 return -1;
             }
-            elseif ( date('Y-m-d H:i:s') < $this->publish_date ) 
+            elseif( date('Y-m-d H:i:s') < $this->publish_date ) 
             {
                 return 0;
             }
@@ -317,8 +319,10 @@ class Content extends DataMapper
     public function translatable_values( $language ) 
     {
         $values = array();
-        foreach ( $this->translations->where('language_id', $language->id )->get() as $value )
+        foreach( $this->translations->where('language_id', $language->id )->get() as $value ) 
+        {
             $values[ $value->name ] = $value->value;
+        }    
 
         return $values;
     }
@@ -343,9 +347,9 @@ class Content extends DataMapper
 
        $data = array_merge_recursive( $data, $this->as_name_value_array() );
 
-       if ( !empty( $language ) ) 
+       if( !empty( $language ) ) 
        {
-            foreach ( $this->translatable_values( $language ) as $key => $value) 
+            foreach( $this->translatable_values( $language ) as $key => $value) 
             {
                 $data[ $key ] = $value;
             }

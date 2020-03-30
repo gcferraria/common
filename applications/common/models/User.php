@@ -60,25 +60,27 @@ class User extends DataMapper
         if( is_array($object) && !empty($object) ) 
         {
             // If exists Roles Delete All.
-            if ( $this->roles->count() > 0 ) 
+            if( $this->roles->count() > 0 ) 
             {
                 $objects = $this->roles->get();
                 $this->delete( $objects->all, 'roles' );
             }
 
             // Associate Roles to User.
-            if ( $ids = $object['roles'] ) 
+            if( $ids = $object['roles'] ) 
             {
-                if ( !empty( $ids ) ) 
+                if( !empty( $ids ) ) 
                 {
                     $roles = array();
-                    foreach ( $ids as $id ) 
+                    foreach( $ids as $id ) 
                     {
                         $role = new Role();
                         $role->get_by_id( $id );
 
-                        if ( !$role->exists() )
+                        if( !$role->exists() ) 
+                        {
                             continue;
+                        }    
 
                         array_push( $roles, $role );
                     }
@@ -91,7 +93,7 @@ class User extends DataMapper
         parent::save( $object, $relation );
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();
@@ -132,8 +134,10 @@ class User extends DataMapper
     public function _encrypt( $field ) 
     {
         // Don't encrypt an empty value.
-        if ( !empty( $this->{ $field } ) )
+        if( !empty( $this->{ $field } ) ) 
+        {
             $this->{ $field } = sha1( $this->{ $field } );
+        }    
     }
 
     /**
@@ -147,8 +151,10 @@ class User extends DataMapper
     {
         foreach( $this->roles->get() as $role ) 
         {
-            if ( preg_match( "/$role->key_match/", $uripath ) == 1 )
+            if( preg_match( "/$role->key_match/", $uripath ) == 1 ) 
+            {
                 return TRUE;
+            }    
         }
 
         return FALSE;

@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @return  mixed depends on what the array contains
  */
 
-if ( !function_exists('array_replace_recursive') ) 
+if( !function_exists('array_replace_recursive') ) 
 {
     function array_replace_recursive() 
     {
@@ -21,16 +21,19 @@ if ( !function_exists('array_replace_recursive') )
         $original = array_shift( $arrays );
 
         // Loop through arrays.
-        foreach ( $arrays as $array ) 
+        foreach( $arrays as $array ) 
         {
             // Loop through array key/value pairs.
-            foreach ( $array as $key => $value ) 
+            foreach( $array as $key => $value ) 
             {
                 // Value is an array.
-                if ( is_array( $value ) && isset( $original[ $key ]) )
+                if( is_array( $value ) && isset( $original[ $key ]) ) {
                     $original[$key] = array_replace_recursive( $original[$key], $array[$key] );
-                else
+                }
+                else 
+                {
                     $original[$key] = $value;
+                }    
             }
         }
 
@@ -48,26 +51,31 @@ if ( !function_exists('array_replace_recursive') )
  * @return array.
 **/
 
-if ( !function_exists('array_sort') ) 
+if( !function_exists('array_sort') ) 
 {
-    function array_sort( &$array, $key ) {
+    function array_sort( &$array, $key ) 
+    {
         $sorter = array();
         $ret    = array();
 
         reset( $array );
 
-        foreach ( $array as $ii => $va ) 
+        foreach( $array as $ii => $va ) 
         {
-            if ( !isset( $va[ $key ] ) )
+            if( !isset( $va[ $key ] ) ) 
+            {
                 continue;
+            }
 
             $sorter[ $ii ] = $va[ $key ];
         }
 
         asort($sorter);
 
-        foreach ( $sorter as $ii => $va )
+        foreach( $sorter as $ii => $va ) 
+        {
             $ret[ $ii ]=$array[ $ii ];
+        }    
 
         $array = $ret;
     }

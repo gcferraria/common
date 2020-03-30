@@ -73,25 +73,27 @@ class Settings_website extends DataMapper
         if( is_array($object) && !empty($object) ) 
         {
             // If exists Languages Delete All.
-            if ( $this->languages->count() > 0 ) 
+            if( $this->languages->count() > 0 ) 
             {
                 $objects = $this->languages->get();
                 $this->delete( $objects->all, 'languages' );
             }
 
             // Associate Languages to Website.
-            if ( $ids = $object['languages'] ) 
+            if( $ids = $object['languages'] ) 
             {
-                if ( !empty( $ids ) ) 
+                if( !empty( $ids ) ) 
                 {
                     $languages = array();
-                    foreach ( $ids as $language ) 
+                    foreach( $ids as $language ) 
                     {
                         $new = new i18n_language();
                         $new->get_by_id( $language );
 
-                        if ( !$new->exists() )
+                        if( !$new->exists() ) 
+                        {
                             continue;
+                        }
 
                         array_push( $languages, $new );
                     }
@@ -104,7 +106,7 @@ class Settings_website extends DataMapper
         }
 
         // Check status of transaction.
-        if ( $this->trans_status() === FALSE ) 
+        if( $this->trans_status() === FALSE ) 
         {
             // Transaction failed, rollback.
             $this->trans_rollback();

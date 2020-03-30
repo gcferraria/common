@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @return string.
 **/
 
-if ( !function_exists('sanitize_string') ) 
+if( !function_exists('sanitize_string') ) 
 {
     function sanitize_string( $string ) 
     {

@@ -9,10 +9,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @return string Youtube video id or FALSE if none found.
  */
 
-if ( !function_exists('youtube_id_from_url') ) {
-
-    function youtube_id_from_url( $url ) {
-
+if( !function_exists('youtube_id_from_url') ) 
+{
+    function youtube_id_from_url( $url ) 
+    {
         $pattern =
             '%^# Match any youtube URL
             (?:https?://)?  # Optional scheme. Either http or https
@@ -31,8 +31,10 @@ if ( !function_exists('youtube_id_from_url') ) {
         ;
 
         $result = preg_match( $pattern, $url, $matches );
-        if ( $result )
+        if( $result ) 
+        {
             return $matches[1];
+        }
 
         return false;
     }
@@ -46,7 +48,8 @@ if ( !function_exists('youtube_id_from_url') ) {
  * @return string Vimeo video id or FALSE if none found.
  */
 
-if ( !function_exists('vimeo_id_from_url') ) {
+if( !function_exists('vimeo_id_from_url') ) 
+{
 
     function vimeo_id_from_url( $url ) {
 
@@ -60,48 +63,53 @@ if ( !function_exists('vimeo_id_from_url') ) {
         ;
 
         $result = preg_match( $pattern, $url, $matches );
-        if ( $result )
+        if ( $result ) 
+        {
             return $matches[1];
+        }
 
         return false;
     }
 }
 
+/**
+ * static_url: Remove the old static url from file and add the current static url.
+ *
+ * @access public
+ * @param  string $url
+ *
+ * @return string new static url.
+ */
 
-
-if ( !function_exists('static_url') ) {
-	
-	/**
-	 * static_url: Remove the old static url from file and add the current static url.
-	 *
-	 * @access public
-	 * @param  string $url
-	 *
-	 * @return string new static url.
-	 */
-    function static_url( $url ) {
+if( !function_exists('static_url') ) 
+{		
+    function static_url( $url ) 
+    {
 	    $CI =& get_instance();
 
         return $CI->config->item('static_url') . str_replace( $CI->config->item('static_url'), '', $url);
     }
 }
 
-if ( ! function_exists('current_url')) {
+/**
+ * Current URL
+ *
+ * Returns the full URL (including segments) of the page where this
+ * function is placed
+ *
+ * @return	string
+ */
 
-	/**
-	 * Current URL
-	 *
-	 * Returns the full URL (including segments) of the page where this
-	 * function is placed
-	 *
-	 * @return	string
-	 */
-	function current_url() {
+if( ! function_exists('current_url')) 
+{
+    function current_url() 
+    {
 		$CI =& get_instance();
-		
+
 		$languages = $CI->config->item('languages');
-		
-		if ( isset( $languages[$CI->uri->segment(1)] ) ) {
+
+        if ( isset( $languages[$CI->uri->segment(1)] ) ) 
+        {
 			$url = explode('/', $CI->config->site_url());
 			array_pop($url);
 			return implode('/', $url) . '/' . $CI->uri->uri_string();
