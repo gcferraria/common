@@ -229,16 +229,19 @@ class Renderer {
         {
             $local_path = join( '/', $path );
 
-            foreach ( $rules as $rule ) 
+            foreach( $rules as $rule ) 
             {
                 $renderer = join( '/', array( $local_path, $rule ) );
 
-                if ( $this->debug ) {
+                if( $this->debug ) 
+                {
                     log_message('debug', __CLASS__ . $renderer );
                 }
 
-                if ( is_file( APPPATH . 'views/html' . "$renderer.php") )
+                if( is_file( APPPATH . ( $this->location ? $this->location : 'views' ) . "$renderer.php" ) ) 
+                {
                     return $renderer;
+                }
             }
 
             // Remove Last position

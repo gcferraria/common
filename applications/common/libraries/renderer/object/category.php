@@ -117,9 +117,6 @@ class Renderer_Category extends Renderer_Object
         // Merge global conditions with custom conditions.
         $conditions = array_merge_recursive(array( 'publish_flag' => 1, 'listed' => 1 ), $options);
 
-        // Get Category Options and get current date.
-        //$options = array_merge_recursive( $this->options(), $options );
-
         if( $this->object->has_views() ) 
         {
             $views = array();
@@ -225,17 +222,21 @@ class Renderer_Category extends Renderer_Object
         }
 
         // Filter by Key Value
-        if( isset( $options['values'] ) && ! empty( $options['values'] ) ) 
+        if ( isset( $options['values'] ) && !empty( $options['values'] ) ) 
         {
-            if( is_array( $options['values']) ) 
+            if ( is_array( $options['values']) ) 
             {
-                $contents->group_start();
-                $contents->where_related( 'values', 'name', str_replace( '<>', '' , array_keys($options['values'])));
-                foreach( $options['values'] as $field => $value ) 
+                foreach ( $options['values'] as $field => $value ) 
                 {
-                    $contents->where_related( 'values', strpos($field, '<>') ? 'value<>' : 'value', $value );
+                    if ( is_array( $value ) )
+                    {
+                        $contents->where_in( $field, $value );
+                    }
+                    else 
+                    {
+                        $contents->where( $field, $value );
+                    }
                 }
-                $contents->group_end();
             }
         }
 

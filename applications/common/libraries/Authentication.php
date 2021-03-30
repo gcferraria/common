@@ -29,8 +29,8 @@
  * @package CodeIgniter
  * @subpackage Libraries
  * @category   Authentication
- * @author  Gonçalo Ferraria <gferraria@gmail.com>
- * @copyright   2011 - 2016 Gonçalo Ferraria
+ * @author  Gonï¿½alo Ferraria <gferraria@gmail.com>
+ * @copyright   2011 - 2016 Gonï¿½alo Ferraria
  * @license http://opensource.org/licenses/MIT  MIT License
  * @link    https://codeigniter.com
  * @since   Version 1.0 form.php 2016-05-29 gferraria $
@@ -73,21 +73,7 @@ class Authentication
     {
         if ( $administrator = $this->administrator() ) 
         {
-            $sessions = $administrator->sessions->where( array(
-                    'session_id' => session_id()
-                )
-            )->count();
-
-            if ( $sessions == 1 ) 
-            {
-                log_message(
-                    'debug',
-                    'Controller: ' . __CLASS__ . '; Method: ' . __METHOD__ . '; '.
-                    'Already exist one Session for Administrator.'
-                );
-
-                return TRUE;
-            }
+            return TRUE;
         }
 
         return FALSE;
