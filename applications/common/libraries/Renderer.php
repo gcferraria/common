@@ -238,7 +238,7 @@ class Renderer {
                     log_message('debug', __CLASS__ . $renderer );
                 }
 
-                if( is_file( APPPATH . ( $this->location ? $this->location : 'views' ) . "$renderer.php" ) ) 
+                if( is_file( APPPATH . 'views/' . ( $this->location ? $this->location : '' ) . "$renderer.php" ) ) 
                 {
                     return $renderer;
                 }
