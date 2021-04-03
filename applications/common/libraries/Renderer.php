@@ -6,7 +6,6 @@ require_once('renderer/list.php');
 require_once('renderer/list/item.php');
 require_once('renderer/object/category.php');
 require_once('renderer/object/content.php');
-require_once('renderer/object/template.php');
 require_once('renderer/object/content/list.php');
 require_once('renderer/object/content/list/item.php');
 require_once('renderer/paged.php');
