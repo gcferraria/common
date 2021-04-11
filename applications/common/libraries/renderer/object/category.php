@@ -560,6 +560,32 @@ class Renderer_Category extends Renderer_Object
         // Create an new Content List.
         return new Renderer_Content_List( $this, $data, null, null, null );
     }
+    
+    /**
+     * templates: Get Templates based on supported content types.
+     *
+     * @access public
+     * @return array
+    **/
+    public function templates() 
+    {
+        $types = $this->object
+            ->content_types
+            ->where( array( 'active_flag' => 1 ) )
+            ->order_by('name ASC');
+
+        $data = array();
+        if( $types ) 
+        {
+            foreach( $types->get() as $type ) 
+            {
+                $type = new Renderer_Template( $type, $this->uripath, $this->renderer );
+                array_push( $data, $type );
+            }
+        }
+
+        return $data;
+    }
 
     /**
      * keywords: Gets contents keywords of the category 
