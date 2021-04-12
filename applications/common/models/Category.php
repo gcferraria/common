@@ -363,7 +363,7 @@ class Category extends DataMapper
              WHERE  o.category_id = c.id
                AND  o.inheritable = 1
                AND  c.id <> " . $this->id . "
-               AND  '".$this->uripath."' LIKE concat( '','%', c.uripath,'%','')
+               AND  '" . $this->uripath . "' LIKE concat( '','%', c.uripath,'%','')
         ");
 
         $options = array();
@@ -436,6 +436,44 @@ class Category extends DataMapper
     }
 
     /**
+     * tops: Get top categories based on content counters.
+     *
+     * @access public
+     * @param  array $limit, [Optional] Categories limit
+     * @return array
+    **/
+    public function tops( $limit ) 
+    {
+        $category = new Category();
+        $category->query("
+            SELECT  * 
+              FROM  category c,
+                    (   
+                    SELECT  cc.category_id
+                        ,   SUM( t.views ) views
+                      FROM  category_content cc
+                        ,   content ct
+                        ,   (
+                            SELECT  content_id
+                                ,   views
+                                FROM  content_tops_mv
+                            ) t
+                    WHERE  1=1
+                    AND  cc.content_id = ct.id
+                    AND  ct.id = t.content_id
+                    GROUP BY cc.category_id
+                    ) l
+            WHERE   1=1
+              AND   c.id = l.category_id
+              AND   c.uripath LIKE '%" . $this->uripath . "%'
+            ORDER   BY l.views DESC
+            LIMIT  " . $limit . "
+        ");
+
+        return $category;
+    }
+
+    /**
      * has_views: Check if this categories has category views.
      *
      * @access public
@@ -464,7 +502,7 @@ class Category extends DataMapper
              WHERE w.category_id = c.id
                AND w.id = lw.settings_website_id
                AND lw.i18n_language_id = l.id
-               AND '".$this->uripath."' LIKE concat( '','%', c.uripath,'%','')
+               AND '" . $this->uripath . "' LIKE concat( '','%', c.uripath,'%','')
         ");
 
         $lang = array();

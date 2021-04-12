@@ -490,6 +490,28 @@ class Renderer_Category extends Renderer_Object
         // Create an new Content List.
         return new Renderer_Content_List( $this, $data, $page, $contents->paged->page_size, $contents->paged->total_rows );
     }
+
+    /**
+     * topCategories: Get top categories based on content counters.
+     *
+     * @access public
+     * @param  array $limit, [Optional] Categories limit
+     * @return array
+    **/
+    public function topCategories( $limit = 10 )
+    {
+        // Get Combined Options for current category.
+        $tops = $this->object->tops( $limit );
+
+        $data = array();
+        foreach( $tops as $top )
+        {
+            $child = new Renderer_Category_List_Item( $top, $this->renderer );
+            array_push( $data, $child );
+        }
+
+        return new Renderer_Category_List( $this, $data, null, null, null );
+    }
  
     /**
      * tops: Get Top Contents.
