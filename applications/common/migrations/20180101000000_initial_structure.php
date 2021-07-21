@@ -27,7 +27,7 @@ class Migration_Initial_Structure extends CI_Migration {
         // Default Administrator
         $this->db->query("
             INSERT INTO `administrator` (`id`, `name`, `username`, `password`, `email`, `sex`, `super_admin_flag`, `active_flag`, `creation_date`, `last_update_date`, `avatar`) VALUES
-            (1, 'Administrator', 'admin', '756624085a54da7f45daf8113008f3262f826c54', 'admin@system.com', 'M', 1, 1, '".date()."', '".date()."', NULL);
+            (1, 'Administrator', 'admin', '756624085a54da7f45daf8113008f3262f826c54', 'admin@system.com', 'M', 1, 1, '".date('Y-m-d')."', '".date('Y-m-d')."', NULL);
         ");
 
         // Create table administrator session
@@ -74,7 +74,7 @@ class Migration_Initial_Structure extends CI_Migration {
         // Default Category
         $this->db->query("
         INSERT INTO `category` (`id`, `parent_id`, `name`, `uriname`, `uripath`, `weight`, `publish_flag`, `listed`, `exposed`, `creation_date`, `last_update_date`, `description`, `creator_id`) VALUES
-            (1, NULL, 'Sites', 'sites', '/sites/', 0, 1, 0, 0, '".date()."', '".date()."', '', 1);
+            (1, NULL, 'Sites', 'sites', '/sites/', 0, 1, 0, 0, '".date('Y-m-d')."', '".date('Y-m-d')."', '', 1);
         ");
         
         // Create table category_content
