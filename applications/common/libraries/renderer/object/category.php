@@ -500,7 +500,6 @@ class Renderer_Category extends Renderer_Object
     **/
     public function topCategories( $limit = 10 )
     {
-        // Get Combined Options for current category.
         $tops = $this->object->tops( $limit );
 
         $data = array();
@@ -618,11 +617,19 @@ class Renderer_Category extends Renderer_Object
     **/
     public function keywords( $limit = NULL, $options = array() )
     {
-        $contents = $this->contents(1, array( 'max_contents' => 999999999 ) );
+        $contents = new Content();
+        $contents->query("
+            SELECT  ct.*
+              FROM  content ct
+             INNER  JOIN category_content cc ON cc.content_id = ct.id
+             INNER  JOIN category c ON cc.category_id = c.id
+             WHERE  c.uripath LIKE '" . $this->uripath . "%'
+              AND   ct.keywords <> ''
+        ");
+
         $keywords = array();
         foreach( $contents as $content )
         {
-            $content = $content->object;
             if( !empty( $content->keywords ) )
             {
                 $keywords = array_merge_recursive( $keywords, explode(",", $content->keywords ) ); 
