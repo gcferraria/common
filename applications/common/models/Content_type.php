@@ -116,6 +116,13 @@ class Content_Type extends DataMapper
                 'translatable' => $field->translatable,
             );
 
+            if( !empty( $field->parent_id ) )
+            {
+                $parent = new Content_Type_Field;
+                $parent->get_by_id( $field->parent_id );
+                $data[ $field->name ]['parent_field'] = $parent->name;
+            }
+
             // Parse Adicional Args.
             if( $args = $field->args ) 
             {
