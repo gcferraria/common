@@ -14,6 +14,18 @@ class Content_Type_Field extends DataMapper
             'class'          => 'content_value',
             'cascade_delete' => TRUE,
         ),
+        'related_caller' => array(
+            'class'        => 'Content_Type_Field',
+            'other_field'  => 'parent',
+            'join_table'   => 'Content_Type_Field',
+            'reciprocal'   => TRUE,
+        ),
+        'caller' => array(
+            'class'          => 'Content_Type_Field',
+            'other_field'    => 'related_caller',
+            'reciprocal'     => TRUE,
+            'cascade_delete' => FALSE,
+        ),
     );
 
     public $validation = array(
@@ -31,6 +43,10 @@ class Content_Type_Field extends DataMapper
         'type' => array(
             'type'  => 'select',
             'rules' => array('required'),
+        ),
+        'parent_id' => array(
+            'type'  => 'select',
+            'rules' => array(),
         ),
         'required' => array(
             'type'  => 'radiogroup',
