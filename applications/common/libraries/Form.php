@@ -286,6 +286,10 @@ class Form
             if ( isset( $field['rules'] ) ) 
                 $field['required'] = in_array( 'required', $field['rules'] );
 
+            // Prevent propagation of the parent field for the next field
+            if ( !isset( $field['parent_field'] ) )
+                $field['parent_field'] = '';
+
             // Gets the Field Render.
             $fields_output .= $this->CI->load->view(
                     $template . $field['type'],
