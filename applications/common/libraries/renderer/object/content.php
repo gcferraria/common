@@ -185,7 +185,7 @@ class Renderer_Content extends Renderer_Object {
     public function isTop( $length = 5 ) {
         $content = new Content();
         $content->query("
-        SELECT  *
+        SELECT  1
         FROM  content c 
           ,   (
               SELECT  content_id

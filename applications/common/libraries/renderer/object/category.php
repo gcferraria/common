@@ -525,6 +525,7 @@ class Renderer_Category extends Renderer_Object
         $date    = date("Y-m-d H:i:s");
         $options = array_replace_recursive( $this->options(), $options );
 
+        $ids = $this->object->id;
         if( $this->object->has_views() )
         {
             $views = array();
@@ -533,44 +534,43 @@ class Renderer_Category extends Renderer_Object
                 $views[] = $view->dest_category_id;
             }
 
-            $contents = new Content();
-            $contents
-                ->where_in_related( 'categories', 'id' , $views )
-                ->include_related_count('counters')
-                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
-                ->group_start()
-                ->where('disable_date >=', date("Y-m-d H:i:s"))
-                ->or_where('disable_date', '0000-00-00 00:00:00')
-                ->group_end()
-                ->order_by('counters_count DESC');
-        }
-        else 
-        {
-            $contents = $this->object
-                ->contents
-                ->where( array( 'publish_date <=' => date("Y-m-d H:i:s"), 'publish_flag' => 1 ) )
-                ->group_start()
-                ->where('disable_date >=', date("Y-m-d H:i:s"))
-                ->or_where('disable_date', '0000-00-00 00:00:00')
-                ->group_end()
-                ->include_related_count('counters')
-                ->order_by('counters_count DESC');
+            $ids = implode(",",$views);
         }
 
         // Min Date
+        $min_date = $date;
         if( isset( $options['min_date'] ) )
-            $contents->where('publish_date >= ', $options['min_date'] );
+        {
+            $min_date = $options['min_date'];
+        }
 
         // Limit
+        $length = 25;
         if( isset( $options['max_contents'] ) && is_numeric( intval($options['max_contents']) ) )
         {
-            $contents->limit( (int)$options['max_contents'] );
+            $length = (int)$options['max_contents'];
         }
+
+        $contents = new Content();
+        $contents->query("
+         SELECT  c.*
+           FROM  content c 
+             ,   content_tops_mv t
+          WHERE 1=1
+            AND c.id = t.content_id
+            AND c.publish_date >= '" . $min_date  ."'
+            AND c.publish_flag = 1
+            AND ( c.disable_date >= '" . $date . "' OR  c.disable_date = '0000-00-00 00:00:00' )
+            AND EXISTS ( SELECT 1 FROM category_content cc where cc.content_id = c.id AND cc.category_id IN ( ". $ids ." ) )
+            ORDER BY views DESC
+            LIMIT  " . $length . "
+            
+        ");
 
         $data = array();
         if( $contents )
         {
-            foreach( $contents->get() as $content )
+            foreach( $contents as $content )
             {
                 $content = $this->renderer->content( $content, $this->uripath );
                 $content = new Renderer_Content_List_Item( $this, $content );
