@@ -38,7 +38,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once 'google-api-php-client/vendor/autoload.php';
+require_once 'google-api-php-client--PHP7/vendor/google/apiclient-services/autoload.php';
 
 class GA_Api 
 {
@@ -73,12 +73,6 @@ class GA_Api
     public $domains = array();
 
     /**
-     * @var    object, Google Service client.
-     * @access private
-    **/
-    private $_client;
-
-    /**
      * @var    object, Google Analytics Service client,
      * @access public
     **/
@@ -98,19 +92,18 @@ class GA_Api
 
         // Load Dependencies.
         $this->CI->load->helper('file');
-        
+
         // Load Configuration.
         $this->_load_config();
 
         // Inicialize Google Anatytics properties.
         $this->_account_email    = $this->_config['account_email'];
         $this->_file_location    = $this->_config['file_location'];
-        $this->_application_name = $this->_config['application_name']; 
-        $this->profiles          = $this->_config['ga_profiles'];
+        $this->_application_name = $this->_config['application_name'];
 
         // Initialize google services
         $this->_init_services(); 
-        
+
         log_message(
             'debug',
             __CLASS__ . 'Class Initialized;'
@@ -137,7 +130,7 @@ class GA_Api
         // Save in Configuration array
         $this->_config = $this->CI->config->item('ga_api');
     }
-    
+
     /**
      * _init_services: Create and configure a new client object
      *
@@ -147,14 +140,14 @@ class GA_Api
     private function _init_services() 
     {
         // Instancie new Google Client
-        $this->client = new Google_Client();
-        
+        $client = new Google\Client();
+
         // Set application Name
-        $this->client->setApplicationName($this->_application_name);
+        //$this->client->setApplicationName($this->_application_name);
         
         // Instancie new Google Analytics Service 
-        $this->analytics = new Google_Service_Analytics($this->client);
-        
+        $this->analytics = new Google\Service\Analytics($client);
+
         // Read configuration file
         $key = read_file($this->_file_location);
 
