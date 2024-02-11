@@ -38,7 +38,7 @@
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require_once 'google-api-php-client--PHP7/vendor/autoload.php';
+require_once 'google-api-php-client/vendor/autoload.php';
 
 class GA_Api 
 {
